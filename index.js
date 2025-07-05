@@ -1,9 +1,15 @@
+import "dotenv/config";
 import express from "express";
 
 // Run app
 const app = express();
 
 app.use(express.json());
+
+// route to show that API is running
+app.get("/", (req, res) => {
+  res.status(200).send("API is running");
+});
 
 // Start app
 app.listen(process.env.PORT, () => {
