@@ -14,9 +14,7 @@
     "cors": "^2.8.5",
     "dotenv": "^17.0.1",
     "express": "^5.1.0",
-    "express-xss-sanitizer": "^2.0.0",
-    "i": "^0.3.7",
-    "npm": "^11.4.2"
+    "express-xss-sanitizer": "^2.0.0"
   },
   "devDependencies": {
     "eslint": "^9.30.1"
