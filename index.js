@@ -1,10 +1,14 @@
 import "dotenv/config";
 import express from "express";
+import expressXssSanitizer, { xss } from "express-xss-sanitizer";
 
 // Run app
 const app = express();
 
 app.use(express.json());
+
+// Prevent XSS attacks
+ap.use(xss());
 
 // route to show that API is running
 app.get("/", (req, res) => {
