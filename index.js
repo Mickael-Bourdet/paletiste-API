@@ -1,11 +1,13 @@
 import "dotenv/config";
 import express from "express";
-import expressXssSanitizer, { xss } from "express-xss-sanitizer";
+import { xss } from "express-xss-sanitizer";
+import cors from "cors";
 
 // Run app
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 // Prevent XSS attacks
 ap.use(xss());
