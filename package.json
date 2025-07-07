@@ -17,5 +17,8 @@
     "express-xss-sanitizer": "^2.0.0",
     "i": "^0.3.7",
     "npm": "^11.4.2"
+  },
+  "devDependencies": {
+    "eslint": "^9.30.1"
   }
 }
