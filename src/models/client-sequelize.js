@@ -2,7 +2,7 @@ import "dotenv/config";
 import { Sequelize } from "sequelize";
 
 const sequelize = new Sequelize(process.env.PG_URL, {
-  logging: false,
+  logging: false, // disable logs in console
 });
 
 export default sequelize;
