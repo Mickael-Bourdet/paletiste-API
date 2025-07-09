@@ -45,14 +45,14 @@ Tag.belongsToMany(Event, {
 // User <--> Event
 Event.belongsToMany(User, {
   through: "user_follows_event",
-  as: "users",
+  as: "user_bookmarked_event",
   foreignKey: "event_id",
   otherKey: "user_id",
 });
 
 User.belongsToMany(Event, {
   through: "user_follows_event",
-  as: "events",
+  as: "event_is_bookmarked",
   foreignKey: "user_id",
   otherKey: "event_id",
 });

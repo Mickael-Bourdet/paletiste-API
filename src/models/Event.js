@@ -57,6 +57,6 @@ Event.init(
   },
   {
     sequelize,
-    tableName: "user",
+    tableName: "event",
   }
 );
