@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(cors());
 
 // Prevent XSS attacks
-ap.use(xss());
+app.use(xss());
 
 // route to show that API is running
 app.get("/", (req, res) => {
