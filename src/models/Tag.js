@@ -13,3 +13,7 @@ Tag.init(
   },
   { sequelize, tableName: "tag" }
 );
+
+// Test
+// const tags = await Tag.findAll();
+// console.log(tags);

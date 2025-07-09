@@ -2,6 +2,11 @@ import "dotenv/config";
 import { Sequelize } from "sequelize";
 
 const sequelize = new Sequelize(process.env.PG_URL, {
+  define: {
+    underscored: true, // userId becomes user_id
+    timestamps: false,
+  },
+
   logging: false, // disable logs in console
 });
 

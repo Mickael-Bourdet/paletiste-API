@@ -60,3 +60,7 @@ Event.init(
     tableName: "event",
   }
 );
+
+// Test
+// const event = await Event.findAll();
+// console.log(event);
