@@ -11,7 +11,10 @@ Tag.init(
       allowNull: false,
     },
   },
-  { sequelize, tableName: "tag" }
+  {
+    sequelize,
+    tableName: "tag",
+  }
 );
 
 // Test
