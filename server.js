@@ -2,7 +2,7 @@ import "dotenv/config";
 import express from "express";
 import { xss } from "express-xss-sanitizer";
 import cors from "cors";
-import { router } from "./src/router/router.js";
+import { router } from "./src/routers/router.js";
 
 // Run app
 const app = express();
