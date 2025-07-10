@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import { xss } from "express-xss-sanitizer";
 import cors from "cors";
+import { router } from "./src/router/router.js";
 
 // Run app
 const app = express();
@@ -16,6 +17,8 @@ app.use(xss());
 app.get("/", (req, res) => {
   res.status(200).send("API is running");
 });
+
+app.use(router);
 
 // Start app
 app.listen(process.env.PORT, () => {
