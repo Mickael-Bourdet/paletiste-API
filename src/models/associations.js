@@ -3,6 +3,7 @@ import { Event } from "./Event.js";
 import { Tag } from "./Tag.js";
 import { User } from "./User.js";
 import { Category } from "./Category.js";
+import { Notification } from "./Notifications.js";
 
 // Category <--> Event
 Category.hasMany(Event, {
@@ -57,4 +58,19 @@ User.belongsToMany(Event, {
   otherKey: "event_id",
 });
 
-export { Category, Event, Tag, User, sequelize };
+// User <--> Notification
+User.belongsToMany(Notification, {
+  through: "user_has_notification",
+  as: "user_unread_message",
+  foreignKey: "event_id",
+  otherKey: "notification_id",
+});
+
+Notification.belongsToMany(User, {
+  through: "user_has_notification",
+  as: "notification_is_send",
+  foreignKey: "notification_id",
+  otherKey: "user_id",
+});
+
+export { Category, Event, Tag, User, Notification, sequelize };
