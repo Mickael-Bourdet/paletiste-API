@@ -3,6 +3,7 @@ import express from "express";
 import { xss } from "express-xss-sanitizer";
 import cors from "cors";
 import { router } from "./src/routers/router.js";
+import { errorHandler } from "./src/middlewares/errorHandler.js";
 
 // Run app
 const app = express();
@@ -20,7 +21,12 @@ app.get("/", (req, res) => {
 
 app.use(router);
 
+// Middleware handling errors
+app.use(errorHandler);
+
 // Start app
 app.listen(process.env.PORT, () => {
-  console.log(`Listening on API running ${process.env.BASE_URL}:${process.env.PORT}`);
+  console.log(
+    `Listening on API running ${process.env.BASE_URL}:${process.env.PORT}`
+  );
 });
