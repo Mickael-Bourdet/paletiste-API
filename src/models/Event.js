@@ -1,6 +1,6 @@
 import sequelize from "./client-sequelize.js";
 import { DataTypes, Model } from "sequelize";
-import { slugify } from "../utils/eventFormatters.js";
+import { slugifyWithComponents } from "../utils/eventFormatters.js";
 
 export class Event extends Model {}
 
@@ -8,7 +8,7 @@ Event.init(
   {
     title: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     slug: {
       type: DataTypes.STRING,
@@ -66,11 +66,18 @@ Event.init(
   }
 );
 
-// Sequelize hook: generate slug from title if not provided
-Event.beforeValidate((event, options) => {
-  // if there is a title and no slug, generate the slug automatically
-  if (event.title && !event.slug) {
-    event.slug = slugify(event.title);
+// Sequelize hook: generate slug from category, organizer and date
+Event.beforeValidate(async (event, options) => {
+  if (!event.slug) {
+    // get the category from the event
+    const category = await event.getCategory();
+    if (category && event.organizer && event.date) {
+      event.slug = slugifyWithComponents(
+        category.name,
+        event.organizer,
+        event.date
+      );
+    }
   }
 });
 
