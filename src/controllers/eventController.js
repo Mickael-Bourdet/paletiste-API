@@ -3,7 +3,7 @@ import {
   formatDate,
   formatTime,
   formatPhoneNumber,
-} from "../utils/formatters.js";
+} from "../utils/eventFormatters.js";
 
 export const eventController = {
   /**

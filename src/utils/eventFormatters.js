@@ -43,3 +43,28 @@ export const formatPhoneNumber = (phone) => {
   // If not 10 digits, return original
   return phone;
 };
+
+/**
+ * Generate a slug from multiple components with "concours" prefix.
+ * @param {string} category - The event category.
+ * @param {string} organizer - The event organizer.
+ * @param {Date|string} date - The event date to extract year.
+ * @returns {string} The slugified string.
+ */
+export const slugifyWithComponents = (category, organizer, date) => {
+  const year = new Date(date).getFullYear();
+
+  // Combine components with "concours" prefix
+  const combined = `concours ${category} ${organizer}`;
+
+  let slug = combined
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // Remove accents
+    .replace(/[^a-z0-9]+/g, "-") // Replace non-alphanum by dash
+    .replace(/(^-|-$)+/g, ""); // Remove leading/trailing dashes
+
+  // Add year to the slug
+  slug = `${slug}-${year}`;
+  return slug;
+};

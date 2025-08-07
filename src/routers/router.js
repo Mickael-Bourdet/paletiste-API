@@ -5,4 +5,4 @@ import { eventRouter } from "./eventRouter.js";
 export const router = Router();
 
 //Sub router
-router.use(eventRouter);
+Lrouter.use(eventRouter);
