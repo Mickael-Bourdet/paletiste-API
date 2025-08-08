@@ -10,20 +10,31 @@ async function seedDatabase() {
     console.log("Data inserted:");
 
     // Create categories
-    const categoryData = [{ name: "Fonte" }, { name: "Laiton" }, { name: "Bois" }, { name: "Terre" }];
+    const categoryData = [
+      { name: "Fonte" },
+      { name: "Laiton" },
+      { name: "Bois" },
+      { name: "Terre" },
+      { name: "Mixte" },
+    ];
     const categories = await Category.bulkCreate(categoryData);
     console.log(categoryData.length, "Categories ");
 
     // Create Tags
-    const tagData = [{ name: "Club" }, { name: "Mix" }, { name: "Individuel" }, { name: "Doublette" }, { name: "Triplette" }, { name: "CDF" }];
+    const tagData = [
+      { name: "Club" },
+      { name: "Individuel" },
+      { name: "Doublette" },
+      { name: "Triplette" },
+      { name: "CDF" },
+    ];
 
-    const tags = await Tag.bulkCreate(tagData);
+    await Tag.bulkCreate(tagData);
     console.log(tagData.length, "Tags ");
 
     const eventData = [
       {
         title: "Concours du Palet Amical Froidfondais 2025",
-        slug: "palet-amical-froidfondais",
         organizer: "Palet Amical Froidfondais",
         poster: "url",
         location: "salle Pierrefite Nestalas",
@@ -37,7 +48,6 @@ async function seedDatabase() {
       },
       {
         title: "Concours de Fonte 2025",
-        slug: "concours-fonte-2025",
         organizer: "Club Fonte",
         poster: "url1",
         location: "Salle 1",
@@ -51,7 +61,6 @@ async function seedDatabase() {
       },
       {
         title: "Laiton Open",
-        slug: "laiton-open",
         organizer: "Team Laiton",
         poster: "url2",
         location: "Salle 2",
@@ -65,7 +74,6 @@ async function seedDatabase() {
       },
       {
         title: "Bois Challenge",
-        slug: "bois-challenge",
         organizer: "Asso Bois",
         poster: "url3",
         location: "Salle 3",
@@ -79,7 +87,6 @@ async function seedDatabase() {
       },
       {
         title: "Terre Cup",
-        slug: "terre-cup",
         organizer: "Terre Club",
         poster: "url4",
         location: "Salle 4",
@@ -93,7 +100,6 @@ async function seedDatabase() {
       },
       {
         title: "Grand Prix Mixte",
-        slug: "grand-prix-mixte",
         organizer: "Mix Club",
         poster: "url5",
         location: "Grande Salle",
@@ -106,7 +112,7 @@ async function seedDatabase() {
         credit_card: true,
       },
     ];
-    const events = await Event.bulkCreate(eventData);
+    const events = await Event.bulkCreate(eventData, { individualHooks: true });
     console.log(tagData.length, "Concours ");
 
     // add category to event
@@ -129,7 +135,7 @@ async function seedDatabase() {
       { event_id: 1, tag_id: 3 },
       { event_id: 2, tag_id: 1 },
       { event_id: 3, tag_id: 2 },
-      { event_id: 3, tag_id: 6 },
+      { event_id: 3, tag_id: 3 },
       { event_id: 4, tag_id: 4 },
       { event_id: 5, tag_id: 5 },
       { event_id: 5, tag_id: 1 },

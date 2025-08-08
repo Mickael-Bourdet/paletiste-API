@@ -1,6 +1,5 @@
 import sequelize from "./client-sequelize.js";
 import { DataTypes, Model } from "sequelize";
-import { slugifyWithComponents } from "../utils/eventFormatters.js";
 
 export class Event extends Model {}
 
@@ -9,11 +8,6 @@ Event.init(
     title: {
       type: DataTypes.STRING,
       allowNull: true,
-    },
-    slug: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
     },
     organizer: {
       type: DataTypes.STRING,
@@ -65,22 +59,6 @@ Event.init(
     tableName: "event",
   }
 );
-
-// Sequelize hook: generate slug from category, organizer and date
-Event.beforeValidate(async (event, options) => {
-  if (!event.slug) {
-    // get the category from the event
-    const category = await event.getCategory();
-    if (category && event.organizer && event.date) {
-      event.slug = slugifyWithComponents(
-        category.name,
-        event.organizer,
-        event.date
-      );
-    }
-  }
-});
-
 // Test
 // const event = await Event.findAll();
 // console.log(event);

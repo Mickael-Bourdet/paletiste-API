@@ -3,6 +3,7 @@ import {
   formatDate,
   formatTime,
   formatPhoneNumber,
+  slugifyWithComponents,
 } from "../utils/eventFormatters.js";
 
 export const eventController = {
@@ -41,7 +42,13 @@ export const eventController = {
 
       // Format each event's date and times for the response
       const formattedEvents = events.map((event) => ({
-        ...event.toJSON(),
+        ...event.toJSON(), // Every event fields
+        slug: slugifyWithComponents(
+          // create slug
+          event.category?.name ?? "", // Category name or empty string
+          event.organizer, // Event organizer
+          event.date // Event date
+        ),
         date: formatDate(event.date), // Format date in French
         registration_time: formatTime(event.registration_time), // Format registration time
         start_time: formatTime(event.start_time), // Format start time
