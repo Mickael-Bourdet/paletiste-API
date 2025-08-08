@@ -73,7 +73,6 @@ async function seedDatabase() {
         credit_card: false,
       },
       {
-        title: "Bois Challenge",
         organizer: "Asso Bois",
         poster: "url3",
         location: "Salle 3",

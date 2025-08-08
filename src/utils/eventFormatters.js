@@ -68,3 +68,9 @@ export const slugifyWithComponents = (category, organizer, date) => {
   slug = `${slug}-${year}`;
   return slug;
 };
+
+export const generateEventTitle = (categoryName, organizer, date) => {
+  const year = new Date(date).getFullYear();
+  const base = `Concours ${categoryName ?? ""} ${organizer}`.trim();
+  return `${base} ${year}`.trim();
+};

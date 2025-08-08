@@ -5,6 +5,7 @@ import {
   formatTime,
   formatPhoneNumber,
   slugifyWithComponents,
+  generateEventTitle,
 } from "../utils/eventFormatters.js";
 
 export const eventController = {
@@ -44,8 +45,12 @@ export const eventController = {
       // Format each event's date and times for the response
       const formattedEvents = events.map((event) => ({
         ...event.toJSON(), // Every event fields
+        // Create a title if empty string
+        title:
+          event.title ??
+          generateEventTitle(event.category?.name, event.organizer, event.date),
+        // create slug
         slug: slugifyWithComponents(
-          // create slug
           event.category?.name ?? "", // Category name or empty string
           event.organizer, // Event organizer
           event.date // Event date
@@ -107,8 +112,12 @@ export const eventController = {
       // Format event fields (date/times/phone) and compute the slug
       const formattedEvent = {
         ...event.toJSON(),
+        // Create a title if empty string
+        title:
+          event.title ??
+          generateEventTitle(event.category?.name, event.organizer, event.date),
+        // create slug
         slug: slugifyWithComponents(
-          // create slug
           event.category?.name ?? "", // Category name or empty string
           event.organizer, // Event organizer
           event.date // Event date
