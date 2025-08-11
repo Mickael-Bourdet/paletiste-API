@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { eventController } from "../controllers/eventController.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 
 export const eventRouter = Router();
 
