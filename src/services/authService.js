@@ -11,3 +11,18 @@ import jwt from "jsonwebtoken";
 export const generateJwtToken = (payload) => {
   return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "15min" });
 };
+
+/**
+ * Verifies a JWT token.
+ *
+ * @param {string} token - The JWT token to verify.
+ * @returns {Object|null} - The decoded payload if the token is valid, null otherwise.
+ */
+export const verifyJwtToken = (token) => {
+  try {
+    return jwt.verify(token, process.env.JWT_SECRET);
+  } catch (error) {
+    console.error("Erreur JWT :", error.message);
+    return null;
+  }
+};
