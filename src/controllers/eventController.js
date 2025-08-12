@@ -24,6 +24,7 @@ export const eventController = {
     try {
       // Fetch all events, excluding category_id and user_id from the main event object
       const events = await Event.findAll({
+        where: { status: "approved" }, // only approved events
         attributes: { exclude: ["category_id", "user_id"] },
         include: [
           {

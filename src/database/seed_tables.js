@@ -45,6 +45,7 @@ async function seedDatabase() {
         reservation: "0607080910",
         price: 10,
         credit_card: false,
+        status: "approved",
       },
       {
         title: "Concours de Fonte 2025",
