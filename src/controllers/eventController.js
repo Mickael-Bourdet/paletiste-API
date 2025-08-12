@@ -133,4 +133,6 @@ export const eventController = {
       next(error);
     }
   },
+
+  async addEvent(req, res, next) {},
 };

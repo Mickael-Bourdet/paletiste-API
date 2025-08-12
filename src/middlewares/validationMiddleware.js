@@ -1,3 +1,4 @@
+import fs from "node:fs";
 /**
  * Middleware function to validate request body against a schema.
  *
@@ -13,6 +14,9 @@ export const validate = (schema) => {
 
     // Check if there is a validation error
     if (error) {
+      if (req.file) {
+        fs.unlink(req.file.path, () => {}); // delete poster upload file if not valid
+      }
       // Extract error messages from the validation error details
       const errorMessage = error.details.map((detail) => detail.message);
 
