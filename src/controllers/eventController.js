@@ -7,6 +7,7 @@ import {
   slugifyWithComponents,
   generateEventTitle,
 } from "../utils/eventFormatters.js";
+import fs from "node:fs";
 
 export const eventController = {
   /**
@@ -135,7 +136,8 @@ export const eventController = {
     }
   },
 
-  async addEvent(req, res, next) {
+  async createEvent(req, res, next) {
+    // TODO : handle notif for modos
     try {
       const {
         title,
@@ -173,6 +175,12 @@ export const eventController = {
 
       res.status(201).json(event);
     } catch (error) {
+      // if server error, delete uploaded file
+      if (req.file) {
+        fs.unlink(req.file.path, (e) => {
+          if (e) console.error("Erreur suppression fichier:", e);
+        });
+      }
       next(error);
     }
   },

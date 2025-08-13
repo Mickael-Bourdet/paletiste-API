@@ -14,5 +14,5 @@ eventRouter.post(
   // authMiddleware,
   uploadEventPoster.single("poster"),
   validate(createEventSchema),
-  eventController.addEvent
+  eventController.createEvent
 );
