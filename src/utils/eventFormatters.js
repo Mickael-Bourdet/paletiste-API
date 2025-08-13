@@ -18,7 +18,7 @@ export const formatDate = (date) => {
  */
 export const formatTime = (time) => {
   if (!time) return null;
-  return time.substring(0, 5); // Keep only 'HH:MM'
+  return time.substring(0, 5).replace(":", "h"); // Keep only 'HH:MM'
 };
 
 /**
@@ -71,6 +71,6 @@ export const slugifyWithComponents = (category, organizer, date) => {
 
 export const generateEventTitle = (categoryName, organizer, date) => {
   const year = new Date(date).getFullYear();
-  const base = `Concours ${categoryName ?? ""} ${organizer}`.trim();
+  const base = `Concours${categoryName ?? ""} ${organizer}`.trim();
   return `${base} ${year}`.trim();
 };

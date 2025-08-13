@@ -24,7 +24,7 @@ export const eventController = {
     try {
       // Fetch all events, excluding category_id and user_id from the main event object
       const events = await Event.findAll({
-        where: { status: "approved" }, // only approved events
+        where: { status: "pending" }, // only approved events
         attributes: { exclude: ["category_id", "user_id"] },
         include: [
           {
@@ -106,7 +106,7 @@ export const eventController = {
         ],
       });
 
-      if (!event) {
+      if (!event || event.status !== "approved") {
         return next(new ApiError("Cet évènement n'existe pas", 404));
       }
 
@@ -135,5 +135,45 @@ export const eventController = {
     }
   },
 
-  async addEvent(req, res, next) {},
+  async addEvent(req, res, next) {
+    try {
+      const {
+        title,
+        organizer,
+        location,
+        date,
+        description,
+        registration_time,
+        start_time,
+        reservation,
+        price,
+        credit_card,
+      } = req.body;
+
+      if (!req.file) {
+        return next(
+          new ApiError("L'affiche de l'évènement est obligatoire", 400)
+        );
+      }
+
+      const event = await Event.create({
+        title,
+        organizer,
+        poster: `/uploads/events/${req.file.filename}`,
+        location,
+        date,
+        description,
+        registration_time,
+        start_time,
+        reservation,
+        price,
+        credit_card,
+        status: "pending",
+      });
+
+      res.status(201).json(event);
+    } catch (error) {
+      next(error);
+    }
+  },
 };

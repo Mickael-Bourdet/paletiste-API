@@ -1,9 +1,8 @@
 import Joi from "joi";
 
 export const createEventSchema = Joi.object({
-  title: Joi.string().trim().min(10).max(100).messages({
+  title: Joi.string().trim().max(100).messages({
     "string.base": "Le titre doit être une chaîne de caractères",
-    "string.min": "Le titre doit contenir au moins 10 caractères",
     "string.max": "Le titre doit contenir au plus 100 caractères",
   }),
   organizer: Joi.string().trim().min(3).max(50).required().messages({
@@ -14,12 +13,6 @@ export const createEventSchema = Joi.object({
       "Le nom de l'organisateur doit contenir au moins 3 caractères",
     "string.max":
       "Le nom de l'organisateur doit contenir au plus 50 caractères",
-  }),
-  poster: Joi.string().trim().min(10).required().messages({
-    "string.base": "L'URL du poster doit être une chaîne de caractères",
-    "string.min": "L'URL du poster doit contenir au moins 10 caractères",
-    "string.empty": "L'URL du poster est obligatoire",
-    "any.required": "L'URL du poster est obligatoire",
   }),
   location: Joi.string().trim().min(3).required().messages({
     "string.base": "Le lieu doit être une chaîne de caractères",
@@ -70,7 +63,7 @@ export const createEventSchema = Joi.object({
   credit_card: Joi.boolean().optional().messages({
     "boolean.base": "Le paiement par carte de crédit doit être un booléen",
   }),
-  status: Joi.valid("pending", "approved", "rejected").required().messages({
+  status: Joi.valid("pending", "approved", "rejected").messages({
     "any.only": "Le statut doit être 'pending', 'approved' ou 'rejected'",
   }),
 });

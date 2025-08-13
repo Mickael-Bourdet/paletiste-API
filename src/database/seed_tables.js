@@ -110,6 +110,7 @@ async function seedDatabase() {
         reservation: "0600000005",
         price: 10,
         credit_card: true,
+        status: "approved",
       },
     ];
     const events = await Event.bulkCreate(eventData, { individualHooks: true });
