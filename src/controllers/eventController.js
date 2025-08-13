@@ -81,12 +81,12 @@ export const eventController = {
    * @returns {Promise<void>} 200 with the formatted event, 400 if invalid id, 404 if not found
    */
   async getOneEvent(req, res, next) {
-    const eventId = Number.parseInt(req.params.id, 10);
-
-    if (Number.isNaN(eventId)) {
-      return next(new ApiError("Identifiant invalide", 400));
-    }
     try {
+      const eventId = Number.parseInt(req.params.id, 10);
+
+      if (Number.isNaN(eventId)) {
+        return next(new ApiError("Identifiant invalide", 400));
+      }
       // Fetch one event, excluding category_id and user_id from the main event object
       const event = await Event.findByPk(eventId, {
         attributes: { exclude: ["category_id", "user_id"] },
@@ -136,6 +136,17 @@ export const eventController = {
     }
   },
 
+  /**
+   * Create a new event.
+   * Handles poster upload. Dates and times should be provided in valid formats.
+   *
+   * @async
+   * @function createEvent
+   * @param {import('express').Request} req - Express request (body contains event data, req.file contains uploaded poster)
+   * @param {import('express').Response} res - Express response
+   * @param {Function} next - Next middleware for error handling
+   * @returns {Promise<void>} 201 with created event, 400 if validation fails
+   */
   async createEvent(req, res, next) {
     // TODO : handle notif for modos
     try {
@@ -181,6 +192,101 @@ export const eventController = {
           if (e) console.error("Erreur suppression fichier:", e);
         });
       }
+      next(error);
+    }
+  },
+
+  /**
+   * Update an existing event.
+   * Allows partial updates and poster replacement. Admin can update status.
+   *
+   * @async
+   * @function updateEvent
+   * @param {import('express').Request} req - Express request (params.id is event ID, body contains fields to update, req.file optional new poster)
+   * @param {import('express').Response} res - Express response
+   * @param {Function} next - Next middleware for error handling
+   * @returns {Promise<void>} 200 with updated event, 400 if validation fails, 404 if event not found
+   */
+  async updateEvent(req, res, next) {
+    try {
+      // First check if the url ID exist, if not error 404
+      const eventId = Number.parseInt(req.params.id, 10);
+
+      if (Number.isNaN(eventId)) {
+        return next(new ApiError("Identifiant invalide", 400));
+      }
+      const event = await Event.findByPk(eventId);
+
+      if (!event) {
+        return next(new ApiError("Cet évènement n'existe pas", 404));
+      }
+
+      // Update poster if a new file is uploaded
+      if (req.file) {
+        if (event.poster) {
+          fs.unlink(event.poster, (err) => {
+            if (err) console.error("Erreur suppression ancien poster:", err);
+          });
+        }
+        event.poster = req.file.path;
+      }
+
+      // Get params that can be modified
+      const fields = [
+        "title",
+        "organizer",
+        "location",
+        "date",
+        "description",
+        "registration_time",
+        "start_time",
+        "reservation",
+        "price",
+        "credit_card",
+      ];
+
+      // if a value is declare, change it otherwise don't
+      fields.forEach((field) => {
+        if (req.body[field] !== undefined) {
+          event[field] = req.body[field];
+        }
+      });
+
+      // Save changes
+      await event.save();
+
+      // return updated event
+      res.status(200).json(event);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  /**
+   * Delete an event by ID.
+   * Removes the associated poster from uploads if present.
+   *
+   * @async
+   * @function deleteEvent
+   * @param {import('express').Request} req - Express request (params.id is event ID)
+   * @param {import('express').Response} res - Express response
+   * @param {Function} next - Next middleware for error handling
+   * @returns {Promise<void>} 200 on successful deletion, 404 if event not found
+   */
+  async deleteEvent(req, res, next) {
+    try {
+      // First check if the url ID exist, if not error 404
+      const eventId = Number.parseInt(req.params.id, 10);
+
+      if (Number.isNaN(eventId)) {
+        return next(new ApiError("Identifiant invalide", 400));
+      }
+
+      const event = await Event.findByPk(eventId);
+      if (!event) {
+        return next(new ApiError("Cet évènement n'existe pas", 404));
+      }
+    } catch (error) {
       next(error);
     }
   },
