@@ -2,7 +2,10 @@ import { Router } from "express";
 import { eventController } from "../controllers/eventController.js";
 // import { authMiddleware } from "../middlewares/authMiddleware.js";
 import { validate } from "../middlewares/validationMiddleware.js";
-import { createEventSchema } from "../middlewares/JoiValidationSchema/eventSchema.js";
+import {
+  createEventSchema,
+  updateEventSchema,
+} from "../middlewares/JoiValidationSchema/eventSchema.js";
 import { uploadEventPoster } from "../middlewares/upload.js";
 
 export const eventRouter = Router();
@@ -15,4 +18,11 @@ eventRouter.post(
   uploadEventPoster.single("poster"),
   validate(createEventSchema),
   eventController.createEvent
+);
+eventRouter.patch(
+  "/events/:id",
+  // authMiddleware,
+  uploadEventPoster.single("poster"),
+  validate(updateEventSchema),
+  eventController.updateEvent
 );
