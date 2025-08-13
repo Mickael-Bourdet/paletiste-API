@@ -26,3 +26,9 @@ eventRouter.patch(
   validate(updateEventSchema),
   eventController.updateEvent
 );
+eventRouter.delete(
+  "/events/:id",
+  // authMiddleware,
+  uploadEventPoster.single("poster"),
+  eventController.deleteEvent
+);

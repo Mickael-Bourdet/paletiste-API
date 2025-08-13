@@ -286,6 +286,13 @@ export const eventController = {
       if (!event) {
         return next(new ApiError("Cet évènement n'existe pas", 404));
       }
+      if (event.poster) {
+        fs.unlink(event.poster, (err) => {
+          if (err) console.error("Erreur suppression ancien poster:", err);
+        });
+      }
+      await event.destroy();
+      res.sendStatus(204);
     } catch (error) {
       next(error);
     }
