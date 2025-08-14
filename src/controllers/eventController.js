@@ -174,7 +174,7 @@ export const eventController = {
       status: "pending",
     });
 
-    res.status(201).json(event);
+    res.status(201).json({ message: "Évènement créé avec succès", event });
   },
 
   /**
@@ -240,7 +240,7 @@ export const eventController = {
     await event.save();
 
     // return updated event
-    res.status(200).json(event);
+    res.status(200).json({ message: "Évènement modifié avec succès", event });
   },
 
   /**
@@ -274,6 +274,6 @@ export const eventController = {
       });
     }
     await event.destroy();
-    res.sendStatus(204);
+    res.status(200).json({ message: "Évènement supprimé avec succès" });
   },
 };
