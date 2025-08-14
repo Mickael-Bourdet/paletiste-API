@@ -18,10 +18,9 @@ export const eventController = {
    * @function getAllEvents
    * @param {import('express').Request} req - Express request object
    * @param {import('express').Response} res - Express response object
-   * @param {Function} next - Express next middleware function
    * @returns {Promise<void>} Sends a JSON response with the list of events
    */
-  async getAllEvents(req, res, next) {
+  async getAllEvents(req, res) {
     // Fetch all events, excluding category_id and user_id from the main event object
     const events = await Event.findAll({
       where: { status: "approved" }, // only approved events
@@ -140,7 +139,7 @@ export const eventController = {
    * @returns {Promise<void>} 201 with created event, 400 if validation fails
    */
   async createEvent(req, res, next) {
-    // TODO : handle notif for modos
+    // TODO : handle notifications for moderators
     const {
       title,
       organizer,
