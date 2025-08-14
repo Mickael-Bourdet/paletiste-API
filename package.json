@@ -17,6 +17,7 @@
   "type": "module",
   "dependencies": {
     "cors": "^2.8.5",
+    "disposable-email-domains": "^1.0.62",
     "dotenv": "^17.0.1",
     "express": "^5.1.0",
     "express-xss-sanitizer": "^2.0.0",
