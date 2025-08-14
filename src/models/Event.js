@@ -7,12 +7,7 @@ Event.init(
   {
     title: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
-    slug: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
+      allowNull: true,
     },
     organizer: {
       type: DataTypes.STRING,
@@ -64,7 +59,6 @@ Event.init(
     tableName: "event",
   }
 );
-
 // Test
 // const event = await Event.findAll();
 // console.log(event);
