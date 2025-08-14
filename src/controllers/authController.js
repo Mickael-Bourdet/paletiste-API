@@ -15,12 +15,10 @@ export const authController = {
     const email = req.body.trim();
     // const password = req.body.trim();
 
-    // 1. Check if the email is already in use
+    // Check if the email is already in use
     const existingEmail = await User.findOne({ where: { email } });
     if (existingEmail) {
       return next(new ApiError("E-mail déjà utilisé", 409));
     }
-
-    // 2. Check if the email is a disposable email
   },
 };
