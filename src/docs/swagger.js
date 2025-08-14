@@ -7,6 +7,15 @@ export const swaggerDefinition = {
     version: "1.0.0",
     description: "Documentation de l'API Paletiste",
   },
+  // components: {
+  //   securitySchemes: {
+  //     bearerAuth: {
+  //       type: "http",
+  //       scheme: "bearer",
+  //       bearerFormat: "JWT",
+  //     },
+  //   },
+  // },
   servers: [
     {
       url: `${process.env.BASE_URL}:${process.env.PORT}`,

@@ -9,7 +9,8 @@
     "db:create": "node src/database/create_tables.js",
     "db:seed": "node src/database/seed_tables.js",
     "db:reset": "node src/database/create_tables.js && node src/database/seed_tables.js",
-    "clean:poster": "node src/scripts/clean-uploads.js"
+    "clean:poster": "node src/scripts/clean-uploads.js",
+    "reset:event":"npm run db:reset && npm run clean:poster"
   },
   "author": "",
   "license": "ISC",

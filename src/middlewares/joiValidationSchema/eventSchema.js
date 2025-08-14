@@ -122,4 +122,4 @@ export const updateEventSchema = Joi.object({
   status: Joi.valid("pending", "approved", "rejected").optional().messages({
     "any.only": "Le statut doit être 'pending', 'approved' ou 'rejected'",
   }),
-});
+}).unknown(true); //ignore "poster"

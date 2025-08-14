@@ -225,7 +225,9 @@ export const eventController = {
       if (req.file) {
         if (event.poster) {
           fs.unlink(event.poster, (err) => {
-            if (err) console.error("Erreur suppression ancien poster:", err);
+            if (err && err.code !== "ENOENT") {
+              console.error("Erreur suppression ancien poster:", err);
+            }
           });
         }
         event.poster = req.file.path;
@@ -246,9 +248,11 @@ export const eventController = {
       ];
 
       // if a value is declare, change it otherwise don't
+      const body = req.body || {}; // Safely read req.body
+
       fields.forEach((field) => {
-        if (req.body[field] !== undefined) {
-          event[field] = req.body[field];
+        if (body[field] !== undefined) {
+          event[field] = body[field];
         }
       });
 
@@ -288,7 +292,9 @@ export const eventController = {
       }
       if (event.poster) {
         fs.unlink(event.poster, (err) => {
-          if (err) console.error("Erreur suppression ancien poster:", err);
+          if (err && err.code !== "ENOENT") {
+            console.error("Erreur suppression ancien poster:", err);
+          }
         });
       }
       await event.destroy();

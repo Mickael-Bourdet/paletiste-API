@@ -10,7 +10,10 @@ export const validate = (schema) => {
   // Return the middleware function
   return (req, _res, next) => {
     // Validate the request body against the schema
-    const { error } = schema.validate(req.body, { abortEarly: false });
+    const { error } = schema.validate(req.body, {
+      abortEarly: false,
+      allowUnknown: true, // put "poster" in req.body without error and only multer handle "poster"
+    });
 
     // Check if there is a validation error
     if (error) {
