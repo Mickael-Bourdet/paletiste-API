@@ -1,6 +1,5 @@
 // TODO : add authentication doc
 // TODO : security bearer
-// TODO : 401: { description: "Unauthorized - authentication required" },
 export const eventRoutes = {
   "/events": {
     get: {
