@@ -10,7 +10,7 @@
     "db:seed": "node src/database/seed_tables.js",
     "db:reset": "node src/database/create_tables.js && node src/database/seed_tables.js",
     "clean:poster": "node src/scripts/clean-uploads.js",
-    "reset:event":"npm run db:reset && npm run clean:poster"
+    "reset:event": "npm run db:reset && npm run clean:poster"
   },
   "author": "",
   "license": "ISC",
@@ -21,6 +21,7 @@
     "express": "^5.1.0",
     "express-xss-sanitizer": "^2.0.0",
     "joi": "^18.0.0",
+    "joi-password": "^4.2.0",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.2",
     "pg": "^8.16.3",
