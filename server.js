@@ -12,7 +12,25 @@ import { swaggerDefinition } from "./src/docs/swagger.js";
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+
+// Define corsOptions
+const allowedDomains = [
+  "http://localhost:3000", // front dev
+  "https://www.paletiste.com", // front prod
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedDomains.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PATCH", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+app.use(cors(corsOptions));
 
 // Prevent XSS attacks
 app.use(xss());
