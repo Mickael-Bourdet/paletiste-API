@@ -4,11 +4,13 @@ import { catchAsync } from "../middlewares/catchAsync.js";
 import { validate } from "../middlewares/validationMiddleware.js";
 import { registerSchema } from "../schemas/registerSchema.js";
 import { checkEmailDomain } from "../middlewares/checkEmailDomain.js";
+import { loginLimiter } from "../middlewares/rateLimiter.js";
 
 export const authRouter = Router();
 
 authRouter.post(
   "/register",
+  loginLimiter,
   validate(registerSchema),
   checkEmailDomain,
   catchAsync(authController.register)

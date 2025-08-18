@@ -19,7 +19,7 @@ const limiter = rateLimit({
   limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
   standardHeaders: "draft-8", // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
-  message: "Trop de requêtes effectuées, réessayer plus tard",
+  message: "Trop de requêtes effectuées, réessayez plus tard",
 });
 
 // Apply the rate limiting middleware to all requests.
