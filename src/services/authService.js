@@ -1,5 +1,6 @@
 import "dotenv/config";
 import jwt from "jsonwebtoken";
+import argon2 from "argon2";
 
 /**
  * Generates a JWT token with the given payload.
@@ -25,4 +26,14 @@ export const verifyJwtToken = (token) => {
     console.error("Erreur JWT :", error.message);
     return null;
   }
+};
+
+/**
+ * Hashes a plain text password using Argon2.
+ *
+ * @param {string} password - The plain text password to hash.
+ * @returns {Promise<string>} - The hashed password.
+ */
+export const hashPassword = async (password) => {
+  return await argon2.hash(password);
 };
