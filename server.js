@@ -7,11 +7,23 @@ import { errorHandler } from "./src/middlewares/errorHandler.js";
 import swaggerUi from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
 import { swaggerDefinition } from "./src/docs/swagger.js";
+import rateLimit from "express-rate-limit";
 
 // Run app
 const app = express();
-
 app.use(express.json());
+
+// Limits number of request per user
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+  standardHeaders: "draft-8", // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+  message: "Trop de requêtes effectuées, réessayer plus tard",
+});
+
+// Apply the rate limiting middleware to all requests.
+app.use(limiter);
 
 // Define corsOptions
 const allowedDomains = [
@@ -27,8 +39,8 @@ const corsOptions = {
       callback(new Error("Not allowed by CORS"));
     }
   },
-  methods: ["GET", "POST", "PATCH", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  methods: ["GET", "POST", "PATCH", "DELETE"], // Limits authorized
+  allowedHeaders: ["Content-Type", "Authorization"], // Limits headers
 };
 app.use(cors(corsOptions));
 
