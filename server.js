@@ -1,4 +1,5 @@
 import "dotenv/config";
+import path from "path";
 import express from "express";
 import { xss } from "express-xss-sanitizer";
 import cors from "cors";
@@ -12,6 +13,9 @@ import rateLimit from "express-rate-limit";
 // Run app
 const app = express();
 app.use(express.json());
+
+// add folder to get posters
+app.use(express.static(path.join(process.cwd(), "uploads/seeding")));
 
 // Limits number of request per user
 const limiter = rateLimit({
