@@ -151,18 +151,28 @@ async function seedDatabase() {
         credit_card: true,
       },
       {
-        organizer: "LPPC Marsais & plaisir compétition",
-        poster: "/uploads/seeding/saint_george_du_bois_17.jpg",
-        location:
-          "Centre équestre les cavaliers du plaisir Le plaisir 17700 Saint Georges du bois",
-        date: "2025-08-30",
-        registration_time: "09:00",
-        start_time: "10:00",
-        reservation:
-          "Virginie : 0687851472, Delphine : 0660919205 ou par mail : plaisircompetition@gmail.com",
-        nb_team: 48,
+        organizer: "Palet club Herbignacais",
+        poster: "/uploads/seeding/herbignac_44.jpg",
+        location: "Salle oceane 44410 Herbignac",
+        date: "2025-09-13",
+        registration_time: "12:00",
+        start_time: "13:00",
+        reservation: "via helloasso ou en scannant le QR Code",
+        nb_team: 72,
         price: 16,
         credit_card: true,
+      },
+      {
+        organizer: "Amical Pétanque Le Fenouiller & Palets Vie Le Fenouiller",
+        poster: "/uploads/seeding/fenouiller_mixte.jpg",
+        location: "Boulodrome Le Fenouiller",
+        date: "2026-07-27",
+        registration_time: "13:30",
+        start_time: "14:00",
+        reservation: "Biathlon palet & pétanque",
+        price: 16,
+        credit_card: false,
+        status: "approved",
       },
     ];
     const events = await Event.bulkCreate(eventData, { individualHooks: true });
@@ -172,10 +182,14 @@ async function seedDatabase() {
     const eventCategoryMap = {
       0: categories[0],
       1: categories[0],
-      2: categories[1],
-      3: categories[2],
-      4: categories[3],
+      2: categories[0],
+      3: categories[0],
+      4: categories[0],
       5: categories[0],
+      6: categories[0],
+      7: categories[0],
+      8: categories[1],
+      9: categories[4],
     };
 
     for (const [index, category] of Object.entries(eventCategoryMap)) {
@@ -184,16 +198,39 @@ async function seedDatabase() {
 
     // join table Event <--> Tag
     const eventTagAssociation = [
-      { event_id: 1, tag_id: 1 },
-      { event_id: 1, tag_id: 3 },
-      { event_id: 2, tag_id: 1 },
-      { event_id: 3, tag_id: 2 },
-      { event_id: 3, tag_id: 3 },
-      { event_id: 4, tag_id: 4 },
+      { event_id: 1, tag_id: 1 }, //Boissiere
+      { event_id: 1, tag_id: 5 },
+      { event_id: 1, tag_id: 11 },
+      { event_id: 1, tag_id: 12 },
+      { event_id: 2, tag_id: 2 }, // Nanteuil
+      { event_id: 2, tag_id: 5 },
+      { event_id: 2, tag_id: 16 },
+      { event_id: 3, tag_id: 1 }, // Meilleraie
+      { event_id: 3, tag_id: 5 },
+      { event_id: 3, tag_id: 12 },
+      { event_id: 4, tag_id: 1 }, // La garnache
+      { event_id: 4, tag_id: 5 },
+      { event_id: 4, tag_id: 11 },
+      { event_id: 4, tag_id: 12 },
+      { event_id: 5, tag_id: 7 }, // CDF
       { event_id: 5, tag_id: 5 },
-      { event_id: 5, tag_id: 1 },
-      { event_id: 6, tag_id: 1 },
-      { event_id: 6, tag_id: 5 },
+      { event_id: 5, tag_id: 11 },
+      { event_id: 5, tag_id: 12 },
+      { event_id: 6, tag_id: 8 }, // open feminin
+      { event_id: 6, tag_id: 4 },
+      { event_id: 6, tag_id: 12 },
+      { event_id: 7, tag_id: 1 }, // Saint pierre Montlimart
+      { event_id: 7, tag_id: 5 },
+      { event_id: 7, tag_id: 14 },
+      { event_id: 8, tag_id: 2 }, // Saint George du bois
+      { event_id: 8, tag_id: 5 },
+      { event_id: 8, tag_id: 15 },
+      { event_id: 9, tag_id: 1 }, // Herbignac
+      { event_id: 9, tag_id: 5 },
+      { event_id: 9, tag_id: 13 },
+      { event_id: 10, tag_id: 1 }, // Fenouiller mixte
+      { event_id: 10, tag_id: 5 },
+      { event_id: 10, tag_id: 12 },
     ];
 
     await sequelize.models.event_has_tag.bulkCreate(eventTagAssociation);
