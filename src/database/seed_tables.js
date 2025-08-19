@@ -47,7 +47,7 @@ async function seedDatabase() {
       {
         title: "Concours la Boissière de Montaigu 2025",
         organizer: "Palet club boisserien",
-        poster: "/uploads/seeding/la_boissière_montaigu.jpg",
+        poster: "/uploads/seeding/la_boissiere_montaigu.jpg",
         location: "salle omnisports",
         date: "2025-09-20",
         description:
@@ -167,9 +167,10 @@ async function seedDatabase() {
         poster: "/uploads/seeding/fenouiller_mixte.jpg",
         location: "Boulodrome Le Fenouiller",
         date: "2026-07-27",
+        description: "Biathlon palet & pétanque",
         registration_time: "13:30",
         start_time: "14:00",
-        reservation: "Biathlon palet & pétanque",
+        reservation: "06 00 00 00 01",
         price: 16,
         credit_card: false,
         status: "approved",

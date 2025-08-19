@@ -15,7 +15,7 @@ const app = express();
 app.use(express.json());
 
 // add folder to get posters
-app.use(express.static(path.join(process.cwd(), "uploads/seeding")));
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 // Limits number of request per user
 const limiter = rateLimit({
