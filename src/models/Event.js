@@ -41,6 +41,10 @@ Event.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    nb_teams: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     price: {
       type: DataTypes.INTEGER,
       allowNull: false,
