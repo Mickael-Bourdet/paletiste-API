@@ -23,7 +23,7 @@ export const eventController = {
   async getAllEvents(req, res) {
     // Fetch all events, excluding category_id and user_id from the main event object
     const events = await Event.findAll({
-      where: { status: "approved" }, // only approved events
+      where: { status: "pending" }, // only approved events
       attributes: { exclude: ["category_id", "user_id"] },
       include: [
         {
@@ -53,7 +53,8 @@ export const eventController = {
       slug: slugifyWithComponents(
         event.category?.name ?? "", // Category name or empty string
         event.organizer, // Event organizer
-        event.date // Event date
+        event.date, // Event date
+        event.tags ?? []
       ),
       date: formatDate(event.date), // Format date in French
       registration_time: formatTime(event.registration_time), // Format registration time
@@ -116,7 +117,8 @@ export const eventController = {
       slug: slugifyWithComponents(
         event.category?.name ?? "", // Category name or empty string
         event.organizer, // Event organizer
-        event.date // Event date
+        event.date, // Event date
+        event.tags ?? []
       ),
       date: formatDate(event.date), // Format date in French
       registration_time: formatTime(event.registration_time), // Format registration time

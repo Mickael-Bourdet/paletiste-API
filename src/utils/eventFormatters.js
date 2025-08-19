@@ -51,11 +51,24 @@ export const formatPhoneNumber = (phone) => {
  * @param {Date|string} date - The event date to extract year.
  * @returns {string} The slugified string.
  */
-export const slugifyWithComponents = (category, organizer, date) => {
+export const slugifyWithComponents = (category, organizer, date, tags = []) => {
   const year = new Date(date).getFullYear();
 
-  // Combine components with "concours" prefix
-  const combined = `concours ${category} ${organizer}`;
+  // Detect special tags
+  const tagNames = tags.map((tag) => tag.name.toLowerCase());
+  let prefix = "concours";
+
+  if (tagNames.includes("cdf")) {
+    prefix = "coupe-de-france";
+  } else if (tagNames.includes("open féminin")) {
+    prefix = "open-feminin";
+  } else if (tagNames.includes("seniors")) {
+    prefix = "tournoi-seniors";
+  } else if (tagNames.includes("jeunes")) {
+    prefix = "coupe-vendee-jeunes";
+  }
+  // Combine components with appropriate prefix
+  const combined = `${prefix} ${category} ${organizer}`;
 
   let slug = combined
     .toLowerCase()
