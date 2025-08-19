@@ -26,22 +26,29 @@ export const formatTime = (time) => {
  * @param {string|null} phone - The phone number string.
  * @returns {string|null} The formatted phone number or null if input is null.
  */
-export const formatPhoneNumber = (phone) => {
-  if (!phone) return null;
+export const formatPhoneNumber = (reservations) => {
+  if (!Array.isArray(reservations)) return reservations;
 
-  // Remove all non-digit characters
-  const digits = phone.replace(/\D/g, "");
+  return reservations.map((field) => {
+    if (field.type === "phone" && typeof field.value === "string") {
+      // Remove all non-digit characters
+      const digits = field.value.replace(/\D/g, "");
 
-  // Format as '06 07 08 09 10' (most readable)
-  if (digits.length === 10) {
-    return digits.replace(
-      /(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/,
-      "$1 $2 $3 $4 $5"
-    );
-  }
-
-  // If not 10 digits, return original
-  return phone;
+      // Format as '06 07 08 09 10' (most readable)
+      let formattedPhone;
+      if (digits.length === 10) {
+        formattedPhone = digits.replace(
+          /(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/,
+          "$1 $2 $3 $4 $5"
+        );
+      } else {
+        formattedPhone = field.value; // if no 10 digits, keep original
+      }
+      return { ...field, value: formattedPhone };
+    } else {
+      return field; //email, url, info or unexpected type
+    }
+  });
 };
 
 /**

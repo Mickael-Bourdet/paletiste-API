@@ -55,7 +55,17 @@ async function seedDatabase() {
           "Concours du club de la Boissière de Montaigu, fonte sur plomb en doublette",
         registration_time: "13:30",
         start_time: "14:30",
-        reservation: "Réservation sur Helloasso en scannant le QR code",
+        reservation: [
+          {
+            type: "url",
+            label: "HelloAsso",
+            value: "https://www.helloasso.com/inscriptions",
+          },
+          {
+            type: "info",
+            value: "Scanner le QR Code sur l'affiche",
+          },
+        ],
         nb_team: 128,
         price: 16,
         credit_card: true,
@@ -68,7 +78,7 @@ async function seedDatabase() {
         date: "2025-09-05",
         description: "Un lot à chaque participant",
         start_time: "19:30",
-        reservation: "0602525255",
+        reservation: [{ type: "phone", value: "0602525255" }],
         price: 14,
         credit_card: false,
       },
@@ -80,8 +90,17 @@ async function seedDatabase() {
         date: "2025-09-06",
         registration_time: "13:30",
         start_time: "14:30",
-        reservation:
-          "Renseignement et pré-inscription par SMS avant le 29 août auprès de Chris : 0750009381",
+        reservation: [
+          {
+            type: "phone",
+            label: "Chris",
+            value: "0750009381",
+          },
+          {
+            type: "info",
+            value: "Renseignement et pré-inscription par SMS avant le 29 août",
+          },
+        ],
         price: 16,
         credit_card: false,
         status: "approved",
@@ -93,7 +112,16 @@ async function seedDatabase() {
         date: "2025-09-13",
         registration_time: "13:30",
         start_time: "15:00",
-        reservation: "Sur pré-inscription au 0617957391 ou sur place",
+        reservation: [
+          {
+            type: "phone",
+            value: "0617957391",
+          },
+          {
+            type: "info",
+            value: "Sur pré-inscription sur place",
+          },
+        ],
         price: 16,
         credit_card: true,
         status: "approved",
@@ -106,8 +134,17 @@ async function seedDatabase() {
         date: "2025-05-30",
         registration_time: "8:30",
         start_time: "9:00",
-        reservation:
-          "Pré-inscriptions obligatoires avant le 10 mai 2025, inscriptions en ligne : www.le-palet.com",
+        reservation: [
+          {
+            type: "info",
+            value: "Pré-inscriptions obligatoires avant le 10 mai 2025",
+          },
+          {
+            type: "url",
+            label: "Site officiel",
+            value: "https://www.le-palet.com",
+          },
+        ],
         price: 6,
         credit_card: true,
         status: "approved",
@@ -120,7 +157,13 @@ async function seedDatabase() {
         date: "2025-03-07",
         description: "Ouvert à toutes",
         start_time: "14:00",
-        reservation: "inscriptions en ligne : www.le-palet.com",
+        reservation: [
+          {
+            type: "url",
+            label: "Site officiel",
+            value: "https://www.le-palet.com",
+          },
+        ],
         price: 6,
         credit_card: true,
       },
@@ -132,7 +175,16 @@ async function seedDatabase() {
         description:
           "Concours du club de Saint Pierre Montlimart, fonte sur plomb en doublette, 1 lot pour tous et première équipe féminine récompensée",
         start_time: "13:30",
-        reservation: "0689077391 avant le 16/08/2025",
+        reservation: [
+          {
+            type: "info",
+            value: "Pré-inscriptions avant le 16/08/2025",
+          },
+          {
+            type: "phone",
+            value: "0689077391",
+          },
+        ],
         price: 16,
         credit_card: false,
         status: "approved",
@@ -145,8 +197,11 @@ async function seedDatabase() {
         date: "2025-08-30",
         registration_time: "09:00",
         start_time: "10:00",
-        reservation:
-          "Virginie : 0687851472, Delphine : 0660919205 ou par mail : plaisircompetition@gmail.com",
+        reservation: [
+          { type: "phone", label: "Virginie", value: "0687851472" },
+          { type: "phone", label: "Delphine", value: "0660919205" },
+          { type: "email", value: "plaisircompetition@gmail.com" },
+        ],
         nb_team: 48,
         price: 16,
         credit_card: true,
@@ -158,7 +213,17 @@ async function seedDatabase() {
         date: "2025-09-13",
         registration_time: "12:00",
         start_time: "13:00",
-        reservation: "via helloasso ou en scannant le QR Code",
+        reservation: [
+          {
+            type: "url",
+            label: "HelloAsso",
+            value: "https://www.helloasso.com/inscriptions",
+          },
+          {
+            type: "info",
+            value: "Scanner le QR Code sur l'affiche",
+          },
+        ],
         nb_team: 72,
         price: 16,
         credit_card: true,
@@ -171,7 +236,7 @@ async function seedDatabase() {
         description: "Biathlon palet & pétanque",
         registration_time: "13:30",
         start_time: "14:00",
-        reservation: "06 00 00 00 01",
+        reservation: [{ type: "phone", value: "06 00 00 00 01" }],
         price: 16,
         credit_card: false,
         status: "approved",

@@ -38,7 +38,7 @@ Event.init(
       allowNull: false,
     },
     reservation: {
-      type: DataTypes.STRING,
+      type: DataTypes.JSON,
       allowNull: false,
     },
     nb_teams: {
