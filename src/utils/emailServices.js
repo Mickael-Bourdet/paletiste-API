@@ -1,9 +1,7 @@
 import dns from "dns";
 import { promisify } from "util";
-const { default: disposableEmails } = await import(
-  "disposable-email-domains/index.json",
-  { assert: { type: "json" } }
-);
+import disposableEmails from "disposable-email-domains" with { type: "json" };
+
 // Promisify the dns.resolveMx function to use it with async/await
 const resolveMx = promisify(dns.resolveMx);
 

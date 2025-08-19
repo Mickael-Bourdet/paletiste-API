@@ -2,12 +2,12 @@ import { Router } from "express";
 import { eventController } from "../controllers/eventController.js";
 // import { authMiddleware } from "../middlewares/authMiddleware.js";
 import { validate } from "../middlewares/validationMiddleware.js";
+import { uploadEventPoster } from "../middlewares/upload.js";
+import { catchAsync } from "../middlewares/catchAsync.js";
 import {
   createEventSchema,
   updateEventSchema,
-} from "../middlewares/JoiValidationSchema/eventSchema.js";
-import { uploadEventPoster } from "../middlewares/upload.js";
-import { catchAsync } from "../middlewares/catchAsync.js";
+} from "../schemas/eventSchema.js";
 
 export const eventRouter = Router();
 
