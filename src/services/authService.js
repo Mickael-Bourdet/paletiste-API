@@ -45,6 +45,25 @@ export const generateRefreshToken = async (payload, userId) => {
   return token;
 };
 
+export const verifyRefreshToken = async (token) => {
+  try {
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+
+    const storedToken = await RefreshToken.findOne({
+      where: { jti: decodedToken.jti, userId: decodedToken.userId },
+    });
+
+    if (!storedToken || storedToken.expiresAt < new Date()) {
+      throw new Error("Refresh token invalide ou expiré");
+    }
+
+    return decodedToken; // contains userId & jti
+  } catch (error) {
+    console.error("Erreur JWT :", error.message);
+    return null;
+  }
+};
+
 /**
  * Hashes a plain text password using Argon2.
  *
