@@ -14,6 +14,7 @@ export const checkEmailDomain = async (req, res, next) => {
   // Validate the email domain
   const domainIsValid = await isDomainValid(email);
   if (!domainIsValid) {
-    return next(new ApiError("Ce domain n'est pas valide.", 400));
+    return next(new ApiError("Ce domaine n'est pas valide.", 400));
   }
+  return next();
 };
