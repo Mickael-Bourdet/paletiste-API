@@ -15,3 +15,10 @@ authRouter.post(
   checkEmailDomain,
   catchAsync(authController.register)
 );
+authRouter.post(
+  "/login",
+  loginLimiter,
+  validate(loginSchema),
+  checkEmailDomain,
+  catchAsync(authController.login)
+);
