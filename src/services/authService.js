@@ -2,6 +2,7 @@ import "dotenv/config";
 import jwt from "jsonwebtoken";
 import argon2 from "argon2";
 import { v4 as uuidv4 } from "uuid";
+import { RefreshToken } from "../models/RefreshToken.js";
 
 /**
  * Generates a JWT token with the given payload.
@@ -29,9 +30,19 @@ export const verifyAccessToken = (token) => {
   }
 };
 
-export const generateRefreshToken = (payload) => {
+export const generateRefreshToken = async (payload, userId) => {
   const jti = uuidv4(); // unique ID for the refresh
-  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "30d" });
+  const token = jwt.sign({ ...payload, jti }, process.env.JWT_SECRET, {
+    expiresIn: "30d",
+  });
+
+  await RefreshToken.create({
+    jti,
+    userId: userId,
+    expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // day date + 30 days
+  });
+
+  return token;
 };
 
 /**
