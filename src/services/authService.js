@@ -64,6 +64,18 @@ export const verifyRefreshToken = async (token) => {
   }
 };
 
+export const rotateRefreshToken = async (oldToken, payload, userId) => {
+  const decodedToken = jwt.verify(oldToken, process.env.JWT_SECRET);
+
+  await RefreshToken.destroy({ where: { jti: decodedToken.jti } });
+
+  return generateRefreshToken(payload, userId);
+};
+
+export const deleteRefreshToken = async (jti) => {
+  await RefreshToken.destroy({ where: { jti } });
+};
+
 /**
  * Hashes a plain text password using Argon2.
  *
