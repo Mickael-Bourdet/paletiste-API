@@ -23,7 +23,7 @@ export const authController = {
     }
 
     // Create new user
-    const newUser = User.create({
+    const newUser = await User.create({
       pseudo,
       email,
       password: await hashPassword(password),
