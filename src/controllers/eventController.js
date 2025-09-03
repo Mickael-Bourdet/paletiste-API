@@ -130,6 +130,74 @@ export const eventController = {
   },
 
   /**
+   * Get one event by its computed slug.
+   * Slug is generated from category, organizer, date and tags.
+   *
+   * @async
+   * @function getOneEventBySlug
+   * @param {import('express').Request} req - Express request (requires params.slug)
+   * @param {import('express').Response} res - Express response
+   * @param {Function} next - Next middleware for error handling
+   * @returns {Promise<void>} 200 with the formatted event, 404 if not found
+   */
+  async getOneEventBySlug(req, res, next) {
+    const { slug } = req.params;
+
+    // Fetch approved events with includes to compute slug reliably
+    const events = await Event.findAll({
+      where: { status: "pending" },
+      attributes: { exclude: ["category_id", "user_id"] },
+      include: [
+        { association: "category", attributes: ["id", "name"] },
+        {
+          association: "tags",
+          attributes: ["id", "name"],
+          through: { attributes: [] },
+        },
+        { association: "author", attributes: ["id", "pseudo"] },
+      ],
+    });
+
+    // Find the event whose computed slug matches
+    const matched = events.find(
+      (event) =>
+        slugifyWithComponents(
+          event.category?.name ?? "",
+          event.organizer,
+          event.date,
+          event.tags ?? []
+        ) === slug
+    );
+
+    if (!matched) {
+      return next(new ApiError("Cet évènement n'existe pas", 404));
+    }
+
+    const formattedEvent = {
+      ...matched.toJSON(),
+      title:
+        matched.title ??
+        generateEventTitle(
+          matched.category?.name,
+          matched.organizer,
+          matched.date
+        ),
+      slug: slugifyWithComponents(
+        matched.category?.name ?? "",
+        matched.organizer,
+        matched.date,
+        matched.tags ?? []
+      ),
+      date: formatDate(matched.date),
+      registration_time: formatTime(matched.registration_time),
+      start_time: formatTime(matched.start_time),
+      reservation: formatPhoneNumber(matched.reservation),
+    };
+
+    res.status(200).json(formattedEvent);
+  },
+
+  /**
    * Create a new event.
    * Handles poster upload. Dates and times should be provided in valid formats.
    *

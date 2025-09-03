@@ -19,7 +19,7 @@ RefreshToken.init(
       allowNull: false,
     },
     device: {
-      type: DataTypes.string,
+      type: DataTypes.STRING,
       allowNull: true,
     },
   },

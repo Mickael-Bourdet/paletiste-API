@@ -12,6 +12,10 @@ import {
 export const eventRouter = Router();
 
 eventRouter.get("/events", catchAsync(eventController.getAllEvents));
+eventRouter.get(
+  "/events/slug/:slug",
+  catchAsync(eventController.getOneEventBySlug)
+);
 eventRouter.get("/events/:id", catchAsync(eventController.getOneEvent));
 eventRouter.post(
   "/events",

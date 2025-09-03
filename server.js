@@ -27,11 +27,13 @@ const limiter = rateLimit({
 });
 
 // Apply the rate limiting middleware to all requests.
-app.use(limiter);
+// TODO : uncomment
+// app.use(limiter);
 
 // Define corsOptions
 const allowedDomains = [
-  "http://localhost:3000", // front dev
+  "http://localhost:5173", // front dev
+  "http://localhost:5174", // front dev
   "https://www.paletiste.com", // front prod
 ];
 

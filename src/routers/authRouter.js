@@ -18,7 +18,7 @@ authRouter.post(
 authRouter.post(
   "/login",
   loginLimiter,
-  validate(loginSchema),
+  // validate(loginSchema),
   checkEmailDomain,
   catchAsync(authController.login)
 );
