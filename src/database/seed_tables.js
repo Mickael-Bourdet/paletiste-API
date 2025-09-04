@@ -22,23 +22,10 @@ async function seedDatabase() {
 
     // Create Tags
     const tagData = [
-      { name: "Club" },
-      { name: "Association" },
       { name: "École" },
-      { name: "Individuel" },
-      { name: "Doublette" },
-      { name: "Triplette" },
-      { name: "CDF" },
-      { name: "Open Féminin" },
-      { name: "Seniors" },
-      { name: "Jeunes" },
+      { name: "Caritatif" },
       { name: "2 palets" },
       { name: "3 palets" },
-      { name: "85" },
-      { name: "44" },
-      { name: "49" },
-      { name: "17" },
-      { name: "79" },
     ];
 
     await Tag.bulkCreate(tagData);
@@ -46,15 +33,19 @@ async function seedDatabase() {
 
     const eventData = [
       {
-        title: "Concours la Boissière de Montaigu 2025",
+        // title: "Concours la Boissière de Montaigu 2025",
+        eventType: "concours",
         organizer: "Palet club boisserien",
+        organizerType: "club",
         poster: "/uploads/seeding/la_boissiere_montaigu.jpg",
-        location: "salle omnisports",
+        streetAddress: "Salle omnisport",
+        postalCode: "85600",
+        city: "La Boissière de Montaigu",
         date: "2025-09-20",
         description:
           "Concours du club de la Boissière de Montaigu, fonte sur plomb en doublette",
-        registration_time: "13:30",
-        start_time: "14:30",
+        registrationTime: "13:30",
+        startTime: "14:30",
         reservation: [
           {
             type: "url",
@@ -66,30 +57,40 @@ async function seedDatabase() {
             value: "Scanner le QR Code sur l'affiche",
           },
         ],
-        nb_team: 128,
-        price: 16,
-        credit_card: true,
-        status: "approved",
+        maxTeams: 128,
+        teamType: "doublette",
+        price: 8,
+        creditCard: true,
+        // status: "approved",
       },
       {
+        eventType: "concours",
         organizer: "Association Villenfolie",
+        organizerType: "association",
         poster: "/uploads/seeding/Nanteuil_79.jpg",
-        location: "Stade Municipal",
+        streetAddress: "Stade Municipal",
+        postalCode: "79400",
+        city: "Nanteuil",
         date: "2025-09-05",
         description: "Un lot à chaque participant",
-        start_time: "19:30",
+        startTime: "19:30",
         reservation: [{ type: "phone", value: "0602525255" }],
-        price: 14,
-        credit_card: false,
+        teamType: "doublette",
+        price: 7,
+        creditCard: false,
       },
       {
-        title: "Concours palet Fonte sur plomb",
+        // title: "Concours palet Fonte sur plomb",
+        eventType: "concours",
         organizer: "Palet club Melletois",
+        organizerType: "club",
         poster: "/uploads/seeding/la_meilleraie_tillay.jpg",
-        location: "Complexe sportif de la Meilleraie Tillay",
+        streetAddress: "Complexe sportif",
+        postalCode: "85140",
+        city: "La Meilleraie-Tillay",
         date: "2025-09-06",
-        registration_time: "13:30",
-        start_time: "14:30",
+        registrationTime: "13:30",
+        startTime: "14:30",
         reservation: [
           {
             type: "phone",
@@ -101,17 +102,22 @@ async function seedDatabase() {
             value: "Renseignement et pré-inscription par SMS avant le 29 août",
           },
         ],
-        price: 16,
-        credit_card: false,
-        status: "approved",
+        teamType: "doublette",
+        price: 8,
+        creditCard: false,
+        // status: "approved",
       },
       {
+        eventType: "concours",
         organizer: "L'amicale Palet Garnachoise",
+        organizerType: "club",
         poster: "/uploads/seeding/la_garnache.jpg",
-        location: "Salle du Genet 85670 La Garnache",
+        streetAddress: "Salle du Genet",
+        postalCode: "85670",
+        city: "La Garnache",
         date: "2025-09-13",
-        registration_time: "13:30",
-        start_time: "15:00",
+        registrationTime: "13:30",
+        startTime: "15:00",
         reservation: [
           {
             type: "phone",
@@ -122,22 +128,27 @@ async function seedDatabase() {
             value: "Sur pré-inscription sur place",
           },
         ],
-        price: 16,
-        credit_card: true,
-        status: "approved",
+        teamType: "doublette",
+        price: 8,
+        creditCard: true,
+        // status: "approved",
       },
       {
-        title: "32eme Coupe de France de palet fonte sur plomb en doublette",
+        title: "34eme Coupe de France de palet fonte sur plomb en doublette",
+        eventType: "coupe_de_France",
         organizer: "FNSMR",
-        poster: "/uploads/seeding/CDF_fonte_2024.jpg",
-        location: "Salle du grand palais à Challans",
-        date: "2025-05-30",
-        registration_time: "8:30",
-        start_time: "9:00",
+        organizerType: "federation",
+        poster: "/uploads/seeding/CDF_fonte_2026.jpg",
+        streetAddress: "Salle de la Demoiselle",
+        postalCode: "85500",
+        city: "Challans",
+        date: "2026-05-30",
+        registrationTime: "8:30",
+        startTime: "9:00",
         reservation: [
           {
             type: "info",
-            value: "Pré-inscriptions obligatoires avant le 10 mai 2025",
+            value: "Pré-inscriptions obligatoires avant le 10 mai 2026",
           },
           {
             type: "url",
@@ -145,18 +156,23 @@ async function seedDatabase() {
             value: "https://www.le-palet.com",
           },
         ],
+        teamType: "doublette",
         price: 6,
-        credit_card: true,
-        status: "approved",
+        creditCard: true,
+        // status: "approved",
       },
       {
-        title: "Open régional Féminin",
+        // title: "Open régional Féminin",
+        eventType: "open",
         organizer: "FNSMR",
+        organizerType: "federation",
         poster: "/uploads/seeding/Affiche-Open-Regional-Palet-Feminin-2024.jpg",
-        location: "Complexe sportif de la Ferrière",
-        date: "2025-03-07",
+        streetAddress: "Complexe sportif",
+        postalCode: "85089",
+        city: "La Ferrière",
+        date: "2026-03-07",
         description: "Ouvert à toutes",
-        start_time: "14:00",
+        startTime: "14:00",
         reservation: [
           {
             type: "url",
@@ -164,55 +180,69 @@ async function seedDatabase() {
             value: "https://www.le-palet.com",
           },
         ],
+        teamType: "individuel",
         price: 6,
-        credit_card: true,
+        creditCard: true,
       },
       {
+        eventType: "concours",
         organizer: "Palet fonte Montlimartois",
+        organizerType: "club",
         poster: "/uploads/seeding/saint_pierre_montlimart_49.jpg",
-        location: "salle de sports de Saint Pierre Montlimart",
-        date: "2025-08-30",
+        streetAddress: "salle de sports",
+        postalCode: "49110",
+        city: "Saint-Pierre-Montlimart",
+        date: "2026-08-30",
         description:
           "Concours du club de Saint Pierre Montlimart, fonte sur plomb en doublette, 1 lot pour tous et première équipe féminine récompensée",
-        start_time: "13:30",
+        startTime: "13:30",
         reservation: [
           {
             type: "info",
-            value: "Pré-inscriptions avant le 16/08/2025",
+            value: "Pré-inscriptions avant le 16/08/2026",
           },
           {
             type: "phone",
             value: "0689077391",
           },
         ],
-        price: 16,
-        credit_card: false,
-        status: "approved",
+        teamType: "doublette",
+        price: 8,
+        creditCard: false,
+        // status: "approved",
       },
       {
+        eventType: "concours",
         organizer: "LPPC Marsais & plaisir compétition",
+        organizerType: "association",
         poster: "/uploads/seeding/saint_george_du_bois_17.jpg",
-        location:
-          "Centre équestre les cavaliers du plaisir Le plaisir 17700 Saint Georges du bois",
+        streetAddress: "Centre équestre les cavaliers du plaisir Le plaisir",
+        postalCode: "17700",
+        city: "Saint Georges du bois",
         date: "2025-08-30",
-        registration_time: "09:00",
-        start_time: "10:00",
+        registrationTime: "09:00",
+        startTime: "10:00",
         reservation: [
           { type: "phone", label: "Virginie", value: "0687851472" },
           { type: "phone", label: "Delphine", value: "0660919205" },
           { type: "email", value: "plaisircompetition@gmail.com" },
         ],
-        nb_team: 48,
-        price: 16,
-        credit_card: true,
+        maxTeams: 48,
+        teamType: "doublette",
+        price: 8,
+        creditCard: true,
       },
       {
+        eventType: "concours",
         organizer: "Palet club Herbignacais",
+        organizerType: "club",
         poster: "/uploads/seeding/herbignac_44.jpg",
-        location: "Salle oceane 44410 Herbignac",
-        date: "2025-09-13",
-        registration_time: "12:00",
-        start_time: "13:00",
+        streetAddress: "Salle oceane",
+        postalCode: "44410",
+        city: "Herbignac",
+        date: "2026-09-13",
+        registrationTime: "12:00",
+        startTime: "13:00",
         reservation: [
           {
             type: "url",
@@ -224,22 +254,69 @@ async function seedDatabase() {
             value: "Scanner le QR Code sur l'affiche",
           },
         ],
-        nb_team: 72,
-        price: 16,
-        credit_card: true,
+        maxTeams: 72,
+        teamType: "doublette",
+        price: 8,
+        creditCard: true,
       },
       {
+        eventType: "concours",
         organizer: "Amical Pétanque Le Fenouiller & Palets Vie Le Fenouiller",
+        organizerType: "club",
         poster: "/uploads/seeding/fenouiller_mixte.jpg",
-        location: "Boulodrome Le Fenouiller",
+        streetAddress: "Boulodrome",
+        postalCode: "85800",
+        city: "Le Fenouiller",
         date: "2026-07-27",
         description: "Biathlon palet & pétanque",
-        registration_time: "13:30",
-        start_time: "14:00",
+        registrationTime: "13:30",
+        startTime: "14:00",
         reservation: [{ type: "phone", value: "06 00 00 00 01" }],
-        price: 16,
-        credit_card: false,
-        status: "approved",
+        teamType: "doublette",
+        price: 8,
+        creditCard: false,
+        // status: "approved",
+      },
+      {
+        eventType: "concours",
+        organizer: "Palet Terre Garnachois",
+        organizerType: "association",
+        poster: "/uploads/seeding/la_garnache_terre.jpg",
+        streetAddress: "Terrain de la gare",
+        postalCode: "85670",
+        city: "La Garnache",
+        date: "2026-06-06",
+        registrationTime: "14:00",
+        startTime: "15:00",
+        reservation: [
+          {
+            type: "phone",
+            value: "0613877456",
+          },
+        ],
+        teamType: "doublette",
+        price: 9,
+        // status: "approved",
+      },
+      {
+        eventType: "concours",
+        organizer: "Un Rayon de soleil pour nos p'tits guerriers",
+        organizerType: "association",
+        poster: "/uploads/seeding/plourivo_22.jpg",
+        streetAddress: "Stade de foot",
+        postalCode: "22860",
+        city: "Plourivo",
+        date: "2026-09-06",
+        startTime: "10:00",
+        reservation: [
+          {
+            type: "phone",
+            value: "0628519727",
+          },
+        ],
+        teamType: "doublette",
+        price: 10,
+        // status: "approved",
       },
     ];
     const events = await Event.bulkCreate(eventData, { individualHooks: true });
@@ -257,6 +334,8 @@ async function seedDatabase() {
       7: categories[0],
       8: categories[1],
       9: categories[4],
+      10: categories[3],
+      11: categories[2],
     };
 
     for (const [index, category] of Object.entries(eventCategoryMap)) {
@@ -265,39 +344,18 @@ async function seedDatabase() {
 
     // join table Event <--> Tag
     const eventTagAssociation = [
-      { event_id: 1, tag_id: 1 }, //Boissiere
-      { event_id: 1, tag_id: 5 },
-      { event_id: 1, tag_id: 11 },
-      { event_id: 1, tag_id: 12 },
-      { event_id: 2, tag_id: 2 }, // Nanteuil
-      { event_id: 2, tag_id: 5 },
-      { event_id: 2, tag_id: 16 },
-      { event_id: 3, tag_id: 1 }, // Meilleraie
-      { event_id: 3, tag_id: 5 },
-      { event_id: 3, tag_id: 12 },
-      { event_id: 4, tag_id: 1 }, // La garnache
-      { event_id: 4, tag_id: 5 },
-      { event_id: 4, tag_id: 11 },
-      { event_id: 4, tag_id: 12 },
-      { event_id: 5, tag_id: 7 }, // CDF
-      { event_id: 5, tag_id: 5 },
-      { event_id: 5, tag_id: 11 },
-      { event_id: 5, tag_id: 12 },
-      { event_id: 6, tag_id: 8 }, // open feminin
-      { event_id: 6, tag_id: 4 },
-      { event_id: 6, tag_id: 12 },
-      { event_id: 7, tag_id: 1 }, // Saint pierre Montlimart
-      { event_id: 7, tag_id: 5 },
-      { event_id: 7, tag_id: 14 },
-      { event_id: 8, tag_id: 2 }, // Saint George du bois
-      { event_id: 8, tag_id: 5 },
-      { event_id: 8, tag_id: 15 },
-      { event_id: 9, tag_id: 1 }, // Herbignac
-      { event_id: 9, tag_id: 5 },
-      { event_id: 9, tag_id: 13 },
-      { event_id: 10, tag_id: 1 }, // Fenouiller mixte
-      { event_id: 10, tag_id: 5 },
-      { event_id: 10, tag_id: 12 },
+      { event_id: 1, tag_id: 4 }, //Boissiere
+      { event_id: 2, tag_id: 4 }, // Nanteuil
+      { event_id: 3, tag_id: 4 }, // Meilleraie
+      { event_id: 4, tag_id: 4 }, // La garnache
+      { event_id: 5, tag_id: 4 }, // CDF
+      { event_id: 6, tag_id: 4 }, // open feminin
+      { event_id: 7, tag_id: 4 }, // Saint pierre Montlimart
+      { event_id: 8, tag_id: 4 }, // Saint George du bois
+      { event_id: 9, tag_id: 4 }, // Herbignac
+      { event_id: 10, tag_id: 4 }, // Fenouiller mixte
+      { event_id: 11, tag_id: 4 }, // Terre la garnache
+      { event_id: 12, tag_id: 4 }, // Plourivo
     ];
 
     await sequelize.models.event_has_tag.bulkCreate(eventTagAssociation);

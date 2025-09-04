@@ -9,15 +9,37 @@ Event.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    eventType: {
+      type: DataTypes.ENUM(
+        "concours",
+        "open",
+        "coupe_de_France",
+        "coupe_jeunes",
+        "seniors"
+      ),
+      allowNull: false,
+    },
     organizer: {
       type: DataTypes.STRING,
+      allowNull: false,
+    },
+    organizerType: {
+      type: DataTypes.ENUM("club", "association", "federation"),
       allowNull: false,
     },
     poster: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    location: {
+    streetAddress: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    postalCode: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
+    },
+    city: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -25,15 +47,11 @@ Event.init(
       type: DataTypes.DATE,
       allowNull: false,
     },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
-    registration_time: {
+    registrationTime: {
       type: DataTypes.TIME,
       allowNull: true,
     },
-    start_time: {
+    startTime: {
       type: DataTypes.TIME,
       allowNull: false,
     },
@@ -41,16 +59,24 @@ Event.init(
       type: DataTypes.JSON,
       allowNull: false,
     },
-    nb_teams: {
+    maxTeams: {
       type: DataTypes.INTEGER,
       allowNull: true,
+    },
+    teamType: {
+      type: DataTypes.ENUM("individuel", "doublette", "triplette"),
+      allowNull: false,
     },
     price: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    credit_card: {
+    creditCard: {
       type: DataTypes.BOOLEAN,
+      allowNull: true,
+    },
+    description: {
+      type: DataTypes.TEXT,
       allowNull: true,
     },
     status: {

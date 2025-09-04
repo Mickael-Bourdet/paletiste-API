@@ -40,6 +40,7 @@ export const eventController = {
           attributes: ["id", "pseudo"],
         },
       ],
+      order: [["id", "ASC"]],
     });
 
     // Format each event's date and times for the response
@@ -57,8 +58,8 @@ export const eventController = {
         event.tags ?? []
       ),
       date: formatDate(event.date), // Format date in French
-      registration_time: formatTime(event.registration_time), // Format registration time
-      start_time: formatTime(event.start_time), // Format start time
+      registrationTime: formatTime(event.registration_time), // Format registration time
+      startTime: formatTime(event.start_time), // Format start time
       reservation: formatPhoneNumber(event.reservation), // Format phone number
     }));
 
