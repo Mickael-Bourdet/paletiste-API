@@ -6,6 +6,7 @@ import {
   formatPhoneNumber,
   slugifyWithComponents,
   generateEventTitle,
+  generateEventTags,
 } from "../utils/eventFormatters.js";
 import fs from "node:fs";
 
@@ -66,6 +67,7 @@ export const eventController = {
       registrationTime: formatTime(event.registrationTime), // Format registration time
       startTime: formatTime(event.startTime), // Format start time
       reservation: formatPhoneNumber(event.reservation), // Format phone number
+      tags: generateEventTags(event),
     }));
 
     res.status(200).json(formattedEvents);

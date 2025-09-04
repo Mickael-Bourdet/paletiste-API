@@ -108,3 +108,14 @@ export const generateEventTitle = (
   const base = `${typeOfEvent} ${categoryName ?? ""} ${organizer}`.trim();
   return `${base} ${year}`.trim();
 };
+
+export const generateEventTags = (event) => {
+  const tags = [...event.tags];
+
+  if (event.postalCode)
+    tags.unshift({ name: event.postalCode.substring(0, 2) });
+  if (event.teamType) tags.unshift({ name: event.teamType });
+  if (event.organizerType) tags.unshift({ name: event.organizerType });
+  if (event.eventType !== "concours") tags.unshift({ name: event.eventType });
+  return tags;
+};

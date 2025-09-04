@@ -135,7 +135,7 @@ async function seedDatabase() {
       },
       {
         title: "34eme Coupe de France de palet fonte sur plomb en doublette",
-        eventType: "coupe_de_france",
+        eventType: "CDF",
         organizer: "FNSMR",
         organizerType: "federation",
         poster: "/uploads/seeding/CDF_fonte_2026.jpg",
@@ -341,7 +341,7 @@ async function seedDatabase() {
         // status: "approved",
       },
       {
-        eventType: "coupe_jeunes",
+        eventType: "jeunes",
         organizer: "FNSMR & AEJP",
         organizerType: "federation",
         poster: "/uploads/seeding/coupe_jeune.jpg",

@@ -10,13 +10,7 @@ Event.init(
       allowNull: true,
     },
     eventType: {
-      type: DataTypes.ENUM(
-        "concours",
-        "open",
-        "coupe_de_france",
-        "coupe_jeunes",
-        "seniors"
-      ),
+      type: DataTypes.ENUM("concours", "open", "CDF", "jeunes", "seniors"),
       allowNull: false,
     },
     organizer: {

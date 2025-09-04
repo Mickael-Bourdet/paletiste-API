@@ -25,11 +25,11 @@ export const createEventSchema = Joi.object({
     "string.max": "Le titre doit contenir au plus 100 caractères",
   }),
   eventType: Joi.string()
-    .valid("concours", "open", "coupe_de_France", "coupe_jeunes", "seniors")
+    .valid("concours", "open", "CDF", "jeunes", "seniors")
     .required()
     .messages({
       "any.only":
-        "Le type d'évènement doit être 'concours', 'open', 'coupe_de_france', 'coupe_jeunes' ou 'seniors'",
+        "Le type d'évènement doit être 'concours', 'open', 'CDF', 'jeunes' ou 'seniors'",
       "any.required": "Le type d'évènement est obligatoire",
     }),
   organizer: Joi.string().trim().min(3).max(100).required().messages({
