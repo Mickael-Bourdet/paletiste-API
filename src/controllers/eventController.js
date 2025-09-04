@@ -49,17 +49,22 @@ export const eventController = {
       // Create a title if empty string
       title:
         event.title ??
-        generateEventTitle(event.category?.name, event.organizer, event.date),
+        generateEventTitle(
+          event.eventType,
+          event.category?.name,
+          event.organizer,
+          event.date
+        ),
       // create slug
       slug: slugifyWithComponents(
+        event.eventType,
         event.category?.name ?? "", // Category name or empty string
         event.organizer, // Event organizer
-        event.date, // Event date
-        event.tags ?? []
+        event.date // Event date
       ),
       date: formatDate(event.date), // Format date in French
-      registrationTime: formatTime(event.registration_time), // Format registration time
-      startTime: formatTime(event.start_time), // Format start time
+      registrationTime: formatTime(event.registrationTime), // Format registration time
+      startTime: formatTime(event.startTime), // Format start time
       reservation: formatPhoneNumber(event.reservation), // Format phone number
     }));
 

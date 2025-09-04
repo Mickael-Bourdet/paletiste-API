@@ -29,7 +29,7 @@ export const createEventSchema = Joi.object({
     .required()
     .messages({
       "any.only":
-        "Le type d'évènement doit être 'concours', 'open', 'coupe_de_France', 'coupe_jeunes' ou 'seniors'",
+        "Le type d'évènement doit être 'concours', 'open', 'coupe_de_france', 'coupe_jeunes' ou 'seniors'",
       "any.required": "Le type d'évènement est obligatoire",
     }),
   organizer: Joi.string().trim().min(3).max(100).required().messages({

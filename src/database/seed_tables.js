@@ -135,7 +135,7 @@ async function seedDatabase() {
       },
       {
         title: "34eme Coupe de France de palet fonte sur plomb en doublette",
-        eventType: "coupe_de_France",
+        eventType: "coupe_de_france",
         organizer: "FNSMR",
         organizerType: "federation",
         poster: "/uploads/seeding/CDF_fonte_2026.jpg",
@@ -318,6 +318,51 @@ async function seedDatabase() {
         price: 10,
         // status: "approved",
       },
+      {
+        eventType: "seniors",
+        organizer: "CDSMR & Palet Club Chavagnais",
+        organizerType: "federation",
+        poster: "/uploads/seeding/tournoi-seniors.jpg",
+        streetAddress: "Salle Emeraude, rue des rosiers",
+        postalCode: "85250",
+        city: "Chavagnes-en-Paillers",
+        date: "2026-04-21",
+        description: "Réservé aux licencié(e)s CDSMR 85 né avant le 1/01/1969",
+        startTime: "14:00",
+        reservation: [
+          {
+            type: "url",
+            label: "HelloAsso",
+            value: "https://www.helloasso.com/inscriptions",
+          },
+        ],
+        teamType: "individuel",
+        price: 8,
+        // status: "approved",
+      },
+      {
+        eventType: "coupe_jeunes",
+        organizer: "FNSMR & AEJP",
+        organizerType: "federation",
+        poster: "/uploads/seeding/coupe_jeune.jpg",
+        streetAddress: "Salle omnisports",
+        postalCode: "85140",
+        city: "Les Essarts",
+        date: "2025-10-25",
+        description: "Ouvert à tous - Licencié(e) ou non à la FNSMR",
+        startTime: "13:30",
+        reservation: [
+          {
+            type: "url",
+            label: "HelloAsso",
+            value: "https://www.helloasso.com/inscriptions",
+          },
+        ],
+        teamType: "doublette",
+        price: 8,
+        creditCard: true,
+        // status: "approved",
+      },
     ];
     const events = await Event.bulkCreate(eventData, { individualHooks: true });
     console.log(tagData.length, "Concours ");
@@ -336,6 +381,8 @@ async function seedDatabase() {
       9: categories[4],
       10: categories[3],
       11: categories[2],
+      12: categories[0],
+      13: categories[0],
     };
 
     for (const [index, category] of Object.entries(eventCategoryMap)) {
@@ -356,6 +403,8 @@ async function seedDatabase() {
       { event_id: 10, tag_id: 4 }, // Fenouiller mixte
       { event_id: 11, tag_id: 4 }, // Terre la garnache
       { event_id: 12, tag_id: 4 }, // Plourivo
+      { event_id: 13, tag_id: 4 }, // Séniors
+      { event_id: 14, tag_id: 4 }, // Jeunes
     ];
 
     await sequelize.models.event_has_tag.bulkCreate(eventTagAssociation);

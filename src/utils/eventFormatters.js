@@ -58,20 +58,19 @@ export const formatPhoneNumber = (reservations) => {
  * @param {Date|string} date - The event date to extract year.
  * @returns {string} The slugified string.
  */
-export const slugifyWithComponents = (category, organizer, date, tags = []) => {
+export const slugifyWithComponents = (eventType, category, organizer, date) => {
   const year = new Date(date).getFullYear();
 
   // Detect special tags
-  const tagNames = tags.map((tag) => tag.name.toLowerCase());
   let prefix = "concours";
 
-  if (tagNames.includes("cdf")) {
+  if (eventType.includes("coupe_de_france")) {
     prefix = "coupe-de-france";
-  } else if (tagNames.includes("open féminin")) {
+  } else if (eventType.includes("open")) {
     prefix = "open-feminin";
-  } else if (tagNames.includes("seniors")) {
+  } else if (eventType.includes("seniors")) {
     prefix = "tournoi-seniors";
-  } else if (tagNames.includes("jeunes")) {
+  } else if (eventType.includes("jeunes")) {
     prefix = "coupe-vendee-jeunes";
   }
   // Combine components with appropriate prefix
@@ -89,8 +88,23 @@ export const slugifyWithComponents = (category, organizer, date, tags = []) => {
   return slug;
 };
 
-export const generateEventTitle = (categoryName, organizer, date) => {
+export const generateEventTitle = (
+  eventType,
+  categoryName,
+  organizer,
+  date
+) => {
   const year = new Date(date).getFullYear();
-  const base = `Concours ${categoryName ?? ""} ${organizer}`.trim();
+  let typeOfEvent = "Concours";
+  if (eventType.includes("coupe_de_france")) {
+    typeOfEvent = "Coupe de France";
+  } else if (eventType.includes("open")) {
+    typeOfEvent = "Open Féminin";
+  } else if (eventType.includes("seniors")) {
+    typeOfEvent = "Tournoi Seniors";
+  } else if (eventType.includes("jeunes")) {
+    typeOfEvent = "Coupe de Vendée Jeunes";
+  }
+  const base = `${typeOfEvent} ${categoryName ?? ""} ${organizer}`.trim();
   return `${base} ${year}`.trim();
 };

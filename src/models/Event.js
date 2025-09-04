@@ -13,7 +13,7 @@ Event.init(
       type: DataTypes.ENUM(
         "concours",
         "open",
-        "coupe_de_France",
+        "coupe_de_france",
         "coupe_jeunes",
         "seniors"
       ),
