@@ -169,8 +169,8 @@ export const formatEvent = (event) => {
     tags: generateEventTags(event),
     date: event.date, // ISO
     dateFormatted: formatDate(event.date), // Format date in French
-    registration_time: formatTime(event.registration_time), // Format registration time
-    start_time: formatTime(event.start_time), // Format start time
+    registrationTime: formatTime(event.registrationTime), // Format registration time
+    startTime: formatTime(event.startTime), // Format start time
     reservation: formatPhoneNumber(event.reservation), // Format phone number
   };
 };

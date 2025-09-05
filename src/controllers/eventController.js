@@ -156,9 +156,8 @@ export const eventController = {
    */
   async getUpcomingEvents(req, res) {
     // Fetch up to 4 approved events with a date in the future, excluding category_id and user_id
-    const event = await Event.findAll({
-      where: { status: "approved" },
-      date: { [Op.gte]: new Date() },
+    const events = await Event.findAll({
+      where: { status: "approved", date: { [Op.gte]: new Date() } },
       attributes: { exclude: ["category_id", "user_id"] },
       include: [
         {
@@ -176,11 +175,11 @@ export const eventController = {
         },
       ],
       limit: 4,
-      order: ["date", "ASC"],
+      order: [["date", "ASC"]],
     });
 
     // Format event fields (date/times/phone) and compute the slug
-    const formattedEvent = formatEvent(event);
+    const formattedEvent = events.map((event) => formatEvent(event));
 
     res.status(200).json(formattedEvent);
   },
@@ -198,12 +197,12 @@ export const eventController = {
    */
   async getMajorEvents(req, res) {
     // Fetch up to 2 approved major events with a date in the future, excluding category_id and user_id
-    const event = await Event.findAll({
+    const events = await Event.findAll({
       attributes: { exclude: ["category_id", "user_id"] },
       where: {
         status: "approved",
         date: { [Op.gte]: new Date() },
-        eventType: { [Op.in]: ["cdf", "open", "femme", "jeunes"] },
+        eventType: { [Op.in]: ["CDF", "open", "femme", "jeunes"] },
       },
       include: [
         {
@@ -221,11 +220,11 @@ export const eventController = {
         },
       ],
       limit: 2,
-      order: ["date", "ASC"],
+      order: [["date", "ASC"]],
     });
 
     // Format event fields (date/times/phone) and compute the slug
-    const formattedEvent = formatEvent(event);
+    const formattedEvent = events.map((event) => formatEvent(event));
 
     res.status(200).json(formattedEvent);
   },
