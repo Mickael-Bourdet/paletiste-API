@@ -1,12 +1,6 @@
 import { ApiError } from "../middlewares/ApiError.js";
 import { Event } from "../models/associations.js";
-import {
-  formatDate,
-  formatTime,
-  formatPhoneNumber,
-  slugifyWithComponents,
-  generateEventTitle,
-} from "../utils/eventFormatters.js";
+import { formatEvent } from "../utils/eventFormatters.js";
 import fs from "node:fs";
 
 export const eventController = {
@@ -45,23 +39,7 @@ export const eventController = {
       });
 
       // Format each event's date and times for the response
-      const formattedEvents = events.map((event) => ({
-        ...event.toJSON(), // Every event fields
-        // Create a title if empty string
-        title:
-          event.title ??
-          generateEventTitle(event.category?.name, event.organizer, event.date),
-        // create slug
-        slug: slugifyWithComponents(
-          event.category?.name ?? "", // Category name or empty string
-          event.organizer, // Event organizer
-          event.date // Event date
-        ),
-        date: formatDate(event.date), // Format date in French
-        registration_time: formatTime(event.registration_time), // Format registration time
-        start_time: formatTime(event.start_time), // Format start time
-        reservation: formatPhoneNumber(event.reservation), // Format phone number
-      }));
+      const formattedEvents = events.map((event) => formatEvent(event));
 
       res.status(200).json(formattedEvents);
     } catch (error) {
@@ -112,24 +90,7 @@ export const eventController = {
       }
 
       // Format event fields (date/times/phone) and compute the slug
-      const formattedEvent = {
-        ...event.toJSON(),
-        // Create a title if empty string
-        title:
-          event.title ??
-          generateEventTitle(event.category?.name, event.organizer, event.date),
-        // create slug
-        slug: slugifyWithComponents(
-          event.category?.name ?? "", // Category name or empty string
-          event.organizer, // Event organizer
-          event.date // Event date
-        ),
-        date: formatDate(event.date), // Format date in French
-        registration_time: formatTime(event.registration_time), // Format registration time
-        start_time: formatTime(event.start_time), // Format start time
-        reservation: formatPhoneNumber(event.reservation), // Format phone number
-      };
-
+      const formattedEvent = formatEvent(event);
       res.status(200).json(formattedEvent);
     } catch (error) {
       next(error);

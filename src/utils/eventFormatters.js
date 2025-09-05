@@ -74,3 +74,24 @@ export const generateEventTitle = (categoryName, organizer, date) => {
   const base = `Concours${categoryName ?? ""} ${organizer}`.trim();
   return `${base} ${year}`.trim();
 };
+
+export const formatEvent = (event) => {
+  return {
+    ...event.toJSON(),
+    // Create a title if empty string
+    title:
+      event.title ??
+      generateEventTitle(event.category?.name, event.organizer, event.date),
+    // create slug
+    slug: slugifyWithComponents(
+      event.category?.name ?? "", // Category name or empty string
+      event.organizer, // Event organizer
+      event.date // Event date
+    ),
+    date: event.date,
+    dateFormatted: formatDate(event.date), // Format date in French
+    registration_time: formatTime(event.registration_time), // Format registration time
+    start_time: formatTime(event.start_time), // Format start time
+    reservation: formatPhoneNumber(event.reservation), // Format phone number
+  };
+};
