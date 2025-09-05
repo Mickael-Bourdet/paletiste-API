@@ -5,7 +5,8 @@ import {
   formatEvent,
   slugifyWithComponents,
 } from "../utils/eventFormatters.js";
-import { Op } from "sequelize";
+import { col, fn, Op, where as sqlWhere } from "sequelize";
+import { queryBuilder } from "../utils/queryBuilder.js";
 
 export const eventController = {
   /**
@@ -19,14 +20,22 @@ export const eventController = {
    * @returns {Promise<void>} Sends a JSON response with the list of events
    */
   async getAllEvents(req, res) {
+    const filters = queryBuilder(req.query);
     // Fetch all events, excluding category_id and user_id from the main event object
     const events = await Event.findAll({
-      where: { status: "approved" }, // only approved events
+      where: { status: "approved", ...filters }, // only approved events
       attributes: { exclude: ["category_id", "user_id"] },
       include: [
         {
           association: "category", // Include the event's category (id, name)
           attributes: ["id", "name"],
+          ...(req.query.category && {
+            where: sqlWhere(fn("unaccent", col("name")), {
+              [Op.iLike]: `%${req.query.category
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")}%`,
+            }),
+          }), //filter by category
         },
         {
           association: "tags", // Include associated tags (id, name)
@@ -40,6 +49,13 @@ export const eventController = {
       ],
       order: [["date", "ASC"]],
     });
+
+    if (!events.length) {
+      return res.status(200).json({
+        message: "Aucun événement trouvé pour ce filtre",
+        events: [],
+      });
+    }
 
     // Format each event's date and times for the response
     const formattedEvents = events.map((event) => formatEvent(event));

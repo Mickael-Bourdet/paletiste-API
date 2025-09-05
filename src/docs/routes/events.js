@@ -283,4 +283,124 @@ export const eventRoutes = {
       },
     },
   },
+  "/events/slug/{slug}": {
+    get: {
+      tags: ["Event"],
+      summary: "Get an event by slug",
+      description: "Get a single approved event by its computed slug",
+      parameters: [
+        {
+          in: "path",
+          name: "slug",
+          required: true,
+          schema: { type: "string" },
+          description: "Computed slug of the event",
+        },
+      ],
+      responses: {
+        200: {
+          description: "Event found",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  id: { type: "integer" },
+                  title: { type: "string" },
+                  slug: { type: "string" },
+                  organizer: { type: "string" },
+                  location: { type: "string" },
+                  date: { type: "string" },
+                  description: { type: "string" },
+                  registration_time: { type: "string" },
+                  start_time: { type: "string" },
+                  reservation: { type: "string" },
+                  price: { type: "integer" },
+                  status: { type: "string" },
+                },
+              },
+            },
+          },
+        },
+        404: { description: "Event not found" },
+        500: { description: "Internal server error" },
+      },
+    },
+  },
+  "/events/upcoming": {
+    get: {
+      tags: ["Event"],
+      summary: "Get next upcoming events",
+      description:
+        "Get up to 4 approved events with the closest dates in the future",
+      responses: {
+        200: {
+          description: "Array of upcoming events",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: { type: "integer" },
+                    title: { type: "string" },
+                    slug: { type: "string" },
+                    organizer: { type: "string" },
+                    location: { type: "string" },
+                    date: { type: "string" },
+                    description: { type: "string" },
+                    registration_time: { type: "string" },
+                    start_time: { type: "string" },
+                    reservation: { type: "string" },
+                    price: { type: "integer" },
+                    status: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+        },
+        500: { description: "Internal server error" },
+      },
+    },
+  },
+  "/events/major": {
+    get: {
+      tags: ["Event"],
+      summary: "Get next major events",
+      description:
+        "Get up to 2 approved major events (CDF, open, femme, jeunes) in the future",
+      responses: {
+        200: {
+          description: "Array of major events",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: { type: "integer" },
+                    title: { type: "string" },
+                    slug: { type: "string" },
+                    organizer: { type: "string" },
+                    location: { type: "string" },
+                    date: { type: "string" },
+                    description: { type: "string" },
+                    registration_time: { type: "string" },
+                    start_time: { type: "string" },
+                    reservation: { type: "string" },
+                    price: { type: "integer" },
+                    status: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+        },
+        500: { description: "Internal server error" },
+      },
+    },
+  },
 };
