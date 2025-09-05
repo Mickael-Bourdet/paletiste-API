@@ -143,13 +143,19 @@ export const eventController = {
     res.status(200).json(formattedEvent);
   },
 
-  async getUpcomingEvent(req, res, next) {
-    const eventId = Number.parseInt(req.params.id, 10);
-
-    if (Number.isNaN(eventId)) {
-      return next(new ApiError("Identifiant invalide", 400));
-    }
-    // Fetch one event, excluding category_id and user_id from the main event object
+  /**
+   * Get the next upcoming events.
+   * Returns up to 4 approved events with the closest dates in the future.
+   *
+   * @async
+   * @function getUpcomingEvent
+   * @param {import('express').Request} req - Express request (optionally contains params.id)
+   * @param {import('express').Response} res - Express response
+   * @param {Function} next - Next middleware for error handling
+   * @returns {Promise<void>} 200 with the formatted events, 400 if invalid id
+   */
+  async getUpcomingEvents(req, res) {
+    // Fetch up to 4 approved events with a date in the future, excluding category_id and user_id
     const event = await Event.findAll({
       where: { status: "approved" },
       date: { [Op.gte]: new Date() },
@@ -179,13 +185,19 @@ export const eventController = {
     res.status(200).json(formattedEvent);
   },
 
-  async getMajorEvent(req, res, next) {
-    const eventId = Number.parseInt(req.params.id, 10);
-
-    if (Number.isNaN(eventId)) {
-      return next(new ApiError("Identifiant invalide", 400));
-    }
-    // Fetch one event, excluding category_id and user_id from the main event object
+  /**
+   * Get the next major events (CDF, open, femme, jeunes).
+   * Returns up to 2 approved major events with the closest dates in the future.
+   *
+   * @async
+   * @function getMajorEvent
+   * @param {import('express').Request} req - Express request (optionally contains params.id)
+   * @param {import('express').Response} res - Express response
+   * @param {Function} next - Next middleware for error handling
+   * @returns {Promise<void>} 200 with the formatted events, 400 if invalid id
+   */
+  async getMajorEvents(req, res) {
+    // Fetch up to 2 approved major events with a date in the future, excluding category_id and user_id
     const event = await Event.findAll({
       attributes: { exclude: ["category_id", "user_id"] },
       where: {

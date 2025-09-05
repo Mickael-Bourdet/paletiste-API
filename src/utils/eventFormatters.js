@@ -95,6 +95,14 @@ export const slugifyWithComponents = (
   return slug;
 };
 
+/**
+ * Generate a formatted event title from its components.
+ * @param {string} eventType - The type of the event (e.g., "open", "coupe_de_france", etc.).
+ * @param {string} categoryName - The name of the event's category.
+ * @param {string} organizer - The organizer of the event.
+ * @param {Date|string} dateFormatted - The event date (used to extract the year).
+ * @returns {string} The generated event title.
+ */
 export const generateEventTitle = (
   eventType,
   categoryName,
@@ -118,6 +126,11 @@ export const generateEventTitle = (
   return `${base} ${year}`.trim();
 };
 
+/**
+ * Generate an array of tags for an event, including postal code, team type, organizer type, and event type.
+ * @param {Object} event - The event object.
+ * @returns {Array<{name: string}>} The array of tag objects.
+ */
 export const generateEventTags = (event) => {
   const tags = [...event.tags];
 
@@ -128,6 +141,12 @@ export const generateEventTags = (event) => {
   if (event.eventType !== "concours") tags.unshift({ name: event.eventType });
   return tags;
 };
+
+/**
+ * Format an event object for API response, including title, slug, tags, and formatted dates/times.
+ * @param {Object} event - The event instance (Sequelize model).
+ * @returns {Object} The formatted event object.
+ */
 export const formatEvent = (event) => {
   return {
     ...event.toJSON(),
