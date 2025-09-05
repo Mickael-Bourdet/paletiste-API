@@ -5,6 +5,7 @@ import {
   formatEvent,
   slugifyWithComponents,
 } from "../utils/eventFormatters.js";
+import { Op } from "sequelize";
 
 export const eventController = {
   /**
@@ -37,7 +38,7 @@ export const eventController = {
           attributes: ["id", "pseudo"],
         },
       ],
-      order: [["id", "ASC"]],
+      order: [["date", "ASC"]],
     });
 
     // Format each event's date and times for the response
@@ -138,6 +139,81 @@ export const eventController = {
     }
 
     const formattedEvent = formatEvent(matched);
+
+    res.status(200).json(formattedEvent);
+  },
+
+  async getUpcomingEvent(req, res, next) {
+    const eventId = Number.parseInt(req.params.id, 10);
+
+    if (Number.isNaN(eventId)) {
+      return next(new ApiError("Identifiant invalide", 400));
+    }
+    // Fetch one event, excluding category_id and user_id from the main event object
+    const event = await Event.findAll({
+      where: { status: "approved" },
+      date: { [Op.gte]: new Date() },
+      attributes: { exclude: ["category_id", "user_id"] },
+      include: [
+        {
+          association: "category", // Include the event's category (id, name)
+          attributes: ["id", "name"],
+        },
+        {
+          association: "tags", // Include associated tags (id, name)
+          attributes: ["id", "name"],
+          through: { attributes: [] }, // Do not return the join table event_has_tag
+        },
+        {
+          association: "author", // Include the event's author (id, pseudo)
+          attributes: ["id", "pseudo"],
+        },
+      ],
+      limit: 4,
+      order: ["date", "ASC"],
+    });
+
+    // Format event fields (date/times/phone) and compute the slug
+    const formattedEvent = formatEvent(event);
+
+    res.status(200).json(formattedEvent);
+  },
+
+  async getMajorEvent(req, res, next) {
+    const eventId = Number.parseInt(req.params.id, 10);
+
+    if (Number.isNaN(eventId)) {
+      return next(new ApiError("Identifiant invalide", 400));
+    }
+    // Fetch one event, excluding category_id and user_id from the main event object
+    const event = await Event.findAll({
+      attributes: { exclude: ["category_id", "user_id"] },
+      where: {
+        status: "approved",
+        date: { [Op.gte]: new Date() },
+        eventType: { [Op.in]: ["cdf", "open", "femme", "jeunes"] },
+      },
+      include: [
+        {
+          association: "category", // Include the event's category (id, name)
+          attributes: ["id", "name"],
+        },
+        {
+          association: "tags", // Include associated tags (id, name)
+          attributes: ["id", "name"],
+          through: { attributes: [] }, // Do not return the join table event_has_tag
+        },
+        {
+          association: "author", // Include the event's author (id, pseudo)
+          attributes: ["id", "pseudo"],
+        },
+      ],
+      limit: 2,
+      order: ["date", "ASC"],
+    });
+
+    // Format event fields (date/times/phone) and compute the slug
+    const formattedEvent = formatEvent(event);
 
     res.status(200).json(formattedEvent);
   },
