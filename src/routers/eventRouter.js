@@ -16,6 +16,11 @@ eventRouter.get(
   "/events/slug/:slug",
   catchAsync(eventController.getOneEventBySlug)
 );
+eventRouter.get(
+  "/events/upcoming",
+  catchAsync(eventController.getUpcomingEvents)
+);
+eventRouter.get("/events/major", catchAsync(eventController.getMajorEvents));
 eventRouter.get("/events/:id", catchAsync(eventController.getOneEvent));
 eventRouter.post(
   "/events",
