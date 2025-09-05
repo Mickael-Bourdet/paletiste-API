@@ -6,30 +6,123 @@ export const eventRoutes = {
       tags: ["Event"],
       summary: "Get all events",
       description: "Get all events with their category, tags, and author",
+      parameters: [
+        {
+          in: "query",
+          name: "department",
+          schema: { type: "string", example: "85" },
+          description: "Filtre par département (préfixe du code postal)",
+        },
+        {
+          in: "query",
+          name: "teamType",
+          schema: {
+            type: "string",
+            enum: ["individuel", "doublette", "triplette"],
+          },
+          description: "Filtre par type d'équipe",
+        },
+        {
+          in: "query",
+          name: "eventType",
+          schema: {
+            type: "string",
+            enum: ["concours", "open", "femme", "CDF", "jeunes", "seniors"],
+          },
+          description: "Filtre par type d'évènement",
+        },
+        {
+          in: "query",
+          name: "organizerType",
+          schema: {
+            type: "string",
+            enum: ["club", "association", "federation"],
+          },
+          description: "Filtre par type d'organisateur",
+        },
+        {
+          in: "query",
+          name: "category",
+          schema: { type: "string", example: "Fonte" },
+          description: "Filtre par catégorie (nom exact)",
+        },
+        {
+          in: "query",
+          name: "specificDate",
+          schema: { type: "string", example: "13 septembre 2025" },
+          description:
+            "Filtre par date précise (ISO, jj/mm/aaaa, jj-mm-aaaa, ou date FR comme '13 septembre 2025')",
+        },
+        {
+          in: "query",
+          name: "monthYear",
+          schema: { type: "string", example: "2025-09" },
+          description:
+            "Filtre par mois/année (ex: 'janvier 2026', '2026-01', '01-2026'). Ignoré si specificDate présent.",
+        },
+        {
+          in: "query",
+          name: "month",
+          schema: { type: "string", example: "janvier" },
+          description:
+            "Alternative à monthYear: mois (fr ou 1-12) combiné avec 'year' (ex: month=janvier&year=2026)",
+        },
+        {
+          in: "query",
+          name: "year",
+          schema: { type: "integer", example: 2026 },
+          description: "Année lorsqu'utilisé avec 'month'",
+        },
+        {
+          in: "query",
+          name: "location",
+          schema: { type: "string", example: "La Ferriere" },
+          description:
+            "Filtre par ville (recherche contient, insensible aux accents et à la casse)",
+        },
+      ],
       responses: {
         200: {
-          description: "Array of events",
+          description: "Array of events or empty result object",
           content: {
             "application/json": {
               schema: {
-                type: "array",
-                items: {
-                  type: "object",
-                  properties: {
-                    id: { type: "integer" },
-                    title: { type: "string" },
-                    slug: { type: "string" },
-                    organizer: { type: "string" },
-                    location: { type: "string" },
-                    date: { type: "string" },
-                    description: { type: "string" },
-                    registration_time: { type: "string" },
-                    start_time: { type: "string" },
-                    reservation: { type: "string" },
-                    price: { type: "integer" },
-                    status: { type: "string" },
+                oneOf: [
+                  {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        id: { type: "integer" },
+                        title: { type: "string" },
+                        slug: { type: "string" },
+                        organizer: { type: "string" },
+                        location: { type: "string" },
+                        date: { type: "string" },
+                        description: { type: "string" },
+                        registration_time: { type: "string" },
+                        start_time: { type: "string" },
+                        reservation: { type: "string" },
+                        price: { type: "integer" },
+                        status: { type: "string" },
+                      },
+                    },
                   },
-                },
+                  {
+                    type: "object",
+                    properties: {
+                      message: {
+                        type: "string",
+                        example: "Aucun événement trouvé pour ce filtre",
+                      },
+                      events: {
+                        type: "array",
+                        items: { type: "object" },
+                        example: [],
+                      },
+                    },
+                  },
+                ],
               },
             },
           },

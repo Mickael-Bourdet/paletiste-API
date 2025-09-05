@@ -29,13 +29,14 @@ export const eventController = {
         {
           association: "category", // Include the event's category (id, name)
           attributes: ["id", "name"],
+          //filter by category and ignore accents
           ...(req.query.category && {
             where: sqlWhere(fn("unaccent", col("name")), {
               [Op.iLike]: `%${req.query.category
                 .normalize("NFD")
                 .replace(/[\u0300-\u036f]/g, "")}%`,
             }),
-          }), //filter by category
+          }),
         },
         {
           association: "tags", // Include associated tags (id, name)
