@@ -1,5 +1,8 @@
 import "dotenv/config";
 import jwt from "jsonwebtoken";
+import argon2 from "argon2";
+import { v4 as uuidv4 } from "uuid";
+import { RefreshToken } from "../models/RefreshToken.js";
 
 /**
  * Generates a JWT token with the given payload.
@@ -8,7 +11,7 @@ import jwt from "jsonwebtoken";
  * @returns {string} - The generated JWT token.
  */
 
-export const generateJwtToken = (payload) => {
+export const generateAccessToken = (payload) => {
   return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "15min" });
 };
 
@@ -18,11 +21,67 @@ export const generateJwtToken = (payload) => {
  * @param {string} token - The JWT token to verify.
  * @returns {Object|null} - The decoded payload if the token is valid, null otherwise.
  */
-export const verifyJwtToken = (token) => {
+export const verifyAccessToken = (token) => {
   try {
     return jwt.verify(token, process.env.JWT_SECRET);
   } catch (error) {
     console.error("Erreur JWT :", error.message);
     return null;
   }
+};
+
+export const generateRefreshToken = async (payload, userId) => {
+  const jti = uuidv4(); // unique ID for the refresh
+  const token = jwt.sign({ ...payload, jti }, process.env.JWT_SECRET, {
+    expiresIn: "30d",
+  });
+
+  await RefreshToken.create({
+    jti,
+    userId: userId,
+    expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // day date + 30 days
+  });
+
+  return token;
+};
+
+export const verifyRefreshToken = async (token) => {
+  try {
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+
+    const storedToken = await RefreshToken.findOne({
+      where: { jti: decodedToken.jti, userId: decodedToken.userId },
+    });
+
+    if (!storedToken || storedToken.expiresAt < new Date()) {
+      throw new Error("Refresh token invalide ou expiré");
+    }
+
+    return decodedToken; // contains userId & jti
+  } catch (error) {
+    console.error("Erreur JWT :", error.message);
+    return null;
+  }
+};
+
+export const rotateRefreshToken = async (oldToken, payload, userId) => {
+  const decodedToken = jwt.verify(oldToken, process.env.JWT_SECRET);
+
+  await RefreshToken.destroy({ where: { jti: decodedToken.jti } });
+
+  return generateRefreshToken(payload, userId);
+};
+
+export const deleteRefreshToken = async (jti) => {
+  await RefreshToken.destroy({ where: { jti } });
+};
+
+/**
+ * Hashes a plain text password using Argon2.
+ *
+ * @param {string} password - The plain text password to hash.
+ * @returns {Promise<string>} - The hashed password.
+ */
+export const hashPassword = async (password) => {
+  return await argon2.hash(password);
 };

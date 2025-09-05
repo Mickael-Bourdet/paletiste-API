@@ -8,25 +8,29 @@
     "dev": "node --watch server.js",
     "db:create": "node src/database/create_tables.js",
     "db:seed": "node src/database/seed_tables.js",
-    "db:reset": "node src/database/create_tables.js && node src/database/seed_tables.js",
-    "clean:poster": "node src/scripts/clean-uploads.js",
-    "reset:event":"npm run db:reset && npm run clean:poster"
+    "db:reset": "node src/database/create_tables.js && node src/database/seed_tables.js && npm run clean:poster",
+    "clean:poster": "node src/scripts/clean-uploads.js"
   },
   "author": "",
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "argon2": "^0.44.0",
     "cors": "^2.8.5",
+    "disposable-email-domains": "^1.0.62",
     "dotenv": "^17.0.1",
     "express": "^5.1.0",
+    "express-rate-limit": "^8.0.1",
     "express-xss-sanitizer": "^2.0.0",
     "joi": "^18.0.0",
+    "joi-password": "^4.2.0",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.2",
     "pg": "^8.16.3",
     "sequelize": "^6.37.7",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "eslint": "^9.30.1"

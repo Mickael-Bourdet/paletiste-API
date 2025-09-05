@@ -2,33 +2,38 @@ import { Router } from "express";
 import { eventController } from "../controllers/eventController.js";
 // import { authMiddleware } from "../middlewares/authMiddleware.js";
 import { validate } from "../middlewares/validationMiddleware.js";
+import { uploadEventPoster } from "../middlewares/upload.js";
+import { catchAsync } from "../middlewares/catchAsync.js";
 import {
   createEventSchema,
   updateEventSchema,
-} from "../middlewares/JoiValidationSchema/eventSchema.js";
-import { uploadEventPoster } from "../middlewares/upload.js";
+} from "../schemas/eventSchema.js";
 
 export const eventRouter = Router();
 
-eventRouter.get("/events", eventController.getAllEvents);
-eventRouter.get("/events/:id", eventController.getOneEvent);
+eventRouter.get("/events", catchAsync(eventController.getAllEvents));
+eventRouter.get(
+  "/events/slug/:slug",
+  catchAsync(eventController.getOneEventBySlug)
+);
+eventRouter.get("/events/:id", catchAsync(eventController.getOneEvent));
 eventRouter.post(
   "/events",
   // authMiddleware,
   uploadEventPoster.single("poster"),
   validate(createEventSchema),
-  eventController.createEvent
+  catchAsync(eventController.createEvent)
 );
 eventRouter.patch(
   "/events/:id",
   // authMiddleware,
   uploadEventPoster.single("poster"),
   validate(updateEventSchema),
-  eventController.updateEvent
+  catchAsync(eventController.updateEvent)
 );
 eventRouter.delete(
   "/events/:id",
   // authMiddleware,
   uploadEventPoster.single("poster"),
-  eventController.deleteEvent
+  catchAsync(eventController.deleteEvent)
 );

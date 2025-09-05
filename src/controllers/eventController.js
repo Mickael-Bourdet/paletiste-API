@@ -1,7 +1,10 @@
 import { ApiError } from "../middlewares/ApiError.js";
 import { Event } from "../models/associations.js";
-import { formatEvent } from "../utils/eventFormatters.js";
 import fs from "node:fs";
+import {
+  formatEvent,
+  slugifyWithComponents,
+} from "../utils/eventFormatters.js";
 
 export const eventController = {
   /**
@@ -12,39 +15,35 @@ export const eventController = {
    * @function getAllEvents
    * @param {import('express').Request} req - Express request object
    * @param {import('express').Response} res - Express response object
-   * @param {Function} next - Express next middleware function
    * @returns {Promise<void>} Sends a JSON response with the list of events
    */
-  async getAllEvents(req, res, next) {
-    try {
-      // Fetch all events, excluding category_id and user_id from the main event object
-      const events = await Event.findAll({
-        where: { status: "approved" }, // only approved events
-        attributes: { exclude: ["category_id", "user_id"] },
-        include: [
-          {
-            association: "category", // Include the event's category (id, name)
-            attributes: ["id", "name"],
-          },
-          {
-            association: "tags", // Include associated tags (id, name)
-            attributes: ["id", "name"],
-            through: { attributes: [] }, // Don't return event_has_tag join table
-          },
-          {
-            association: "author", // Include the event's author (id, name)
-            attributes: ["id", "pseudo"],
-          },
-        ],
-      });
+  async getAllEvents(req, res) {
+    // Fetch all events, excluding category_id and user_id from the main event object
+    const events = await Event.findAll({
+      where: { status: "approved" }, // only approved events
+      attributes: { exclude: ["category_id", "user_id"] },
+      include: [
+        {
+          association: "category", // Include the event's category (id, name)
+          attributes: ["id", "name"],
+        },
+        {
+          association: "tags", // Include associated tags (id, name)
+          attributes: ["id", "name"],
+          through: { attributes: [] }, // Don't return event_has_tag join table
+        },
+        {
+          association: "author", // Include the event's author (id, name)
+          attributes: ["id", "pseudo"],
+        },
+      ],
+      order: [["id", "ASC"]],
+    });
 
-      // Format each event's date and times for the response
-      const formattedEvents = events.map((event) => formatEvent(event));
+    // Format each event's date and times for the response
+    const formattedEvents = events.map((event) => formatEvent(event));
 
-      res.status(200).json(formattedEvents);
-    } catch (error) {
-      next(error);
-    }
+    res.status(200).json(formattedEvents);
   },
 
   /**
@@ -59,42 +58,88 @@ export const eventController = {
    * @returns {Promise<void>} 200 with the formatted event, 400 if invalid id, 404 if not found
    */
   async getOneEvent(req, res, next) {
-    try {
-      const eventId = Number.parseInt(req.params.id, 10);
+    const eventId = Number.parseInt(req.params.id, 10);
 
-      if (Number.isNaN(eventId)) {
-        return next(new ApiError("Identifiant invalide", 400));
-      }
-      // Fetch one event, excluding category_id and user_id from the main event object
-      const event = await Event.findByPk(eventId, {
-        attributes: { exclude: ["category_id", "user_id"] },
-        include: [
-          {
-            association: "category", // Include the event's category (id, name)
-            attributes: ["id", "name"],
-          },
-          {
-            association: "tags", // Include associated tags (id, name)
-            attributes: ["id", "name"],
-            through: { attributes: [] }, // Do not return the join table event_has_tag
-          },
-          {
-            association: "author", // Include the event's author (id, pseudo)
-            attributes: ["id", "pseudo"],
-          },
-        ],
-      });
-
-      if (!event || event.status !== "approved") {
-        return next(new ApiError("Cet évènement n'existe pas", 404));
-      }
-
-      // Format event fields (date/times/phone) and compute the slug
-      const formattedEvent = formatEvent(event);
-      res.status(200).json(formattedEvent);
-    } catch (error) {
-      next(error);
+    if (Number.isNaN(eventId)) {
+      return next(new ApiError("Identifiant invalide", 400));
     }
+    // Fetch one event, excluding category_id and user_id from the main event object
+    const event = await Event.findByPk(eventId, {
+      attributes: { exclude: ["category_id", "user_id"] },
+      include: [
+        {
+          association: "category", // Include the event's category (id, name)
+          attributes: ["id", "name"],
+        },
+        {
+          association: "tags", // Include associated tags (id, name)
+          attributes: ["id", "name"],
+          through: { attributes: [] }, // Do not return the join table event_has_tag
+        },
+        {
+          association: "author", // Include the event's author (id, pseudo)
+          attributes: ["id", "pseudo"],
+        },
+      ],
+    });
+
+    if (!event || event.status !== "approved") {
+      return next(new ApiError("Cet évènement n'existe pas", 404));
+    }
+
+    // Format event fields (date/times/phone) and compute the slug
+    const formattedEvent = formatEvent(event);
+
+    res.status(200).json(formattedEvent);
+  },
+
+  /**
+   * Get one event by its computed slug.
+   * Slug is generated from category, organizer, date and tags.
+   *
+   * @async
+   * @function getOneEventBySlug
+   * @param {import('express').Request} req - Express request (requires params.slug)
+   * @param {import('express').Response} res - Express response
+   * @param {Function} next - Next middleware for error handling
+   * @returns {Promise<void>} 200 with the formatted event, 404 if not found
+   */
+  async getOneEventBySlug(req, res, next) {
+    const { slug } = req.params;
+
+    // Fetch approved events with includes to compute slug reliably
+    const events = await Event.findAll({
+      where: { status: "pending" },
+      attributes: { exclude: ["category_id", "user_id"] },
+      include: [
+        { association: "category", attributes: ["id", "name"] },
+        {
+          association: "tags",
+          attributes: ["id", "name"],
+          through: { attributes: [] },
+        },
+        { association: "author", attributes: ["id", "pseudo"] },
+      ],
+    });
+
+    // Find the event whose computed slug matches
+    const matched = events.find(
+      (event) =>
+        slugifyWithComponents(
+          event.category?.name ?? "",
+          event.organizer,
+          event.dateFormatted,
+          event.tags ?? []
+        ) === slug
+    );
+
+    if (!matched) {
+      return next(new ApiError("Cet évènement n'existe pas", 404));
+    }
+
+    const formattedEvent = formatEvent(matched);
+
+    res.status(200).json(formattedEvent);
   },
 
   /**
@@ -109,52 +154,42 @@ export const eventController = {
    * @returns {Promise<void>} 201 with created event, 400 if validation fails
    */
   async createEvent(req, res, next) {
-    // TODO : handle notif for modos
-    try {
-      const {
-        title,
-        organizer,
-        location,
-        date,
-        description,
-        registration_time,
-        start_time,
-        reservation,
-        price,
-        credit_card,
-      } = req.body;
+    // TODO : handle notifications for moderators
+    const {
+      title,
+      organizer,
+      location,
+      date,
+      description,
+      registration_time,
+      start_time,
+      reservation,
+      price,
+      credit_card,
+    } = req.body;
 
-      if (!req.file) {
-        return next(
-          new ApiError("L'affiche de l'évènement est obligatoire", 400)
-        );
-      }
-
-      const event = await Event.create({
-        title,
-        organizer,
-        poster: `/uploads/events/${req.file.filename}`,
-        location,
-        date,
-        description,
-        registration_time,
-        start_time,
-        reservation,
-        price,
-        credit_card,
-        status: "pending",
-      });
-
-      res.status(201).json(event);
-    } catch (error) {
-      // if server error, delete uploaded file
-      if (req.file) {
-        fs.unlink(req.file.path, (e) => {
-          if (e) console.error("Erreur suppression fichier:", e);
-        });
-      }
-      next(error);
+    if (!req.file) {
+      return next(
+        new ApiError("L'affiche de l'évènement est obligatoire", 400)
+      );
     }
+
+    const event = await Event.create({
+      title,
+      organizer,
+      poster: `/uploads/events/${req.file.filename}`,
+      location,
+      date,
+      description,
+      registration_time,
+      start_time,
+      reservation,
+      price,
+      credit_card,
+      status: "pending",
+    });
+
+    res.status(201).json({ message: "Évènement créé avec succès", event });
   },
 
   /**
@@ -169,62 +204,58 @@ export const eventController = {
    * @returns {Promise<void>} 200 with updated event, 400 if validation fails, 404 if event not found
    */
   async updateEvent(req, res, next) {
-    try {
-      // First check if the url ID exist, if not error 404
-      const eventId = Number.parseInt(req.params.id, 10);
+    // First check if the url ID exist, if not error 404
+    const eventId = Number.parseInt(req.params.id, 10);
 
-      if (Number.isNaN(eventId)) {
-        return next(new ApiError("Identifiant invalide", 400));
-      }
-      const event = await Event.findByPk(eventId);
-
-      if (!event) {
-        return next(new ApiError("Cet évènement n'existe pas", 404));
-      }
-
-      // Update poster if a new file is uploaded
-      if (req.file) {
-        if (event.poster) {
-          fs.unlink(event.poster, (err) => {
-            if (err && err.code !== "ENOENT") {
-              console.error("Erreur suppression ancien poster:", err);
-            }
-          });
-        }
-        event.poster = req.file.path;
-      }
-
-      // Get params that can be modified
-      const fields = [
-        "title",
-        "organizer",
-        "location",
-        "date",
-        "description",
-        "registration_time",
-        "start_time",
-        "reservation",
-        "price",
-        "credit_card",
-      ];
-
-      // if a value is declare, change it otherwise don't
-      const body = req.body || {}; // Safely read req.body
-
-      fields.forEach((field) => {
-        if (body[field] !== undefined) {
-          event[field] = body[field];
-        }
-      });
-
-      // Save changes
-      await event.save();
-
-      // return updated event
-      res.status(200).json(event);
-    } catch (error) {
-      next(error);
+    if (Number.isNaN(eventId)) {
+      return next(new ApiError("Identifiant invalide", 400));
     }
+    const event = await Event.findByPk(eventId);
+
+    if (!event) {
+      return next(new ApiError("Cet évènement n'existe pas", 404));
+    }
+
+    // Update poster if a new file is uploaded
+    if (req.file) {
+      if (event.poster) {
+        fs.unlink(event.poster, (err) => {
+          if (err && err.code !== "ENOENT") {
+            console.error("Erreur suppression ancien poster:", err);
+          }
+        });
+      }
+      event.poster = req.file.path;
+    }
+
+    // Get params that can be modified
+    const fields = [
+      "title",
+      "organizer",
+      "location",
+      "date",
+      "description",
+      "registration_time",
+      "start_time",
+      "reservation",
+      "price",
+      "credit_card",
+    ];
+
+    // if a value is declare, change it otherwise don't
+    const body = req.body || {}; // Safely read req.body
+
+    fields.forEach((field) => {
+      if (body[field] !== undefined) {
+        event[field] = body[field];
+      }
+    });
+
+    // Save changes
+    await event.save();
+
+    // return updated event
+    res.status(200).json({ message: "Évènement modifié avec succès", event });
   },
 
   /**
@@ -239,29 +270,25 @@ export const eventController = {
    * @returns {Promise<void>} 200 on successful deletion, 404 if event not found
    */
   async deleteEvent(req, res, next) {
-    try {
-      // First check if the url ID exist, if not error 404
-      const eventId = Number.parseInt(req.params.id, 10);
+    // First check if the url ID exist, if not error 404
+    const eventId = Number.parseInt(req.params.id, 10);
 
-      if (Number.isNaN(eventId)) {
-        return next(new ApiError("Identifiant invalide", 400));
-      }
-
-      const event = await Event.findByPk(eventId);
-      if (!event) {
-        return next(new ApiError("Cet évènement n'existe pas", 404));
-      }
-      if (event.poster) {
-        fs.unlink(event.poster, (err) => {
-          if (err && err.code !== "ENOENT") {
-            console.error("Erreur suppression ancien poster:", err);
-          }
-        });
-      }
-      await event.destroy();
-      res.sendStatus(204);
-    } catch (error) {
-      next(error);
+    if (Number.isNaN(eventId)) {
+      return next(new ApiError("Identifiant invalide", 400));
     }
+
+    const event = await Event.findByPk(eventId);
+    if (!event) {
+      return next(new ApiError("Cet évènement n'existe pas", 404));
+    }
+    if (event.poster) {
+      fs.unlink(event.poster, (err) => {
+        if (err && err.code !== "ENOENT") {
+          console.error("Erreur suppression ancien poster:", err);
+        }
+      });
+    }
+    await event.destroy();
+    res.status(200).json({ message: "Évènement supprimé avec succès" });
   },
 };
