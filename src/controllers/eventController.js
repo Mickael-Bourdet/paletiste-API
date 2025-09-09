@@ -25,6 +25,7 @@ export const eventController = {
     const events = await Event.findAll({
       where: { status: "approved", ...filters }, // only approved events
       attributes: { exclude: ["category_id", "user_id"] },
+      pagination: 20,
       include: [
         {
           association: "category", // Include the event's category (id, name)
@@ -238,6 +239,38 @@ export const eventController = {
       ],
       limit: 2,
       order: [["date", "ASC"]],
+    });
+
+    // Format event fields (date/times/phone) and compute the slug
+    const formattedEvent = events.map((event) => formatEvent(event));
+
+    res.status(200).json(formattedEvent);
+  },
+  async getLatestAddedEvents(req, res) {
+    // Fetch up to 2 approved major events with a date in the future, excluding category_id and user_id
+    const events = await Event.findAll({
+      attributes: { exclude: ["category_id", "user_id"] },
+      where: {
+        status: "approved",
+        date: { [Op.gte]: new Date() },
+      },
+      include: [
+        {
+          association: "category", // Include the event's category (id, name)
+          attributes: ["id", "name"],
+        },
+        {
+          association: "tags", // Include associated tags (id, name)
+          attributes: ["id", "name"],
+          through: { attributes: [] }, // Do not return the join table event_has_tag
+        },
+        {
+          association: "author", // Include the event's author (id, pseudo)
+          attributes: ["id", "pseudo"],
+        },
+      ],
+      limit: 4,
+      order: [["id", "DESC"]],
     });
 
     // Format event fields (date/times/phone) and compute the slug
