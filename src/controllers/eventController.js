@@ -175,7 +175,11 @@ export const eventController = {
   async getUpcomingEvents(req, res) {
     // Fetch up to 4 approved events with a date in the future, excluding category_id and user_id
     const events = await Event.findAll({
-      where: { status: "approved", date: { [Op.gte]: new Date() } },
+      where: {
+        status: "approved",
+        date: { [Op.gte]: new Date() },
+        eventType: "concours",
+      },
       attributes: { exclude: ["category_id", "user_id"] },
       include: [
         {
@@ -237,7 +241,7 @@ export const eventController = {
           attributes: ["id", "pseudo"],
         },
       ],
-      limit: 2,
+      limit: 1,
       order: [["date", "ASC"]],
     });
 
