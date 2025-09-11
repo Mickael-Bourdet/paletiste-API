@@ -217,9 +217,9 @@ export const eventController = {
    * @param {Function} next - Next middleware for error handling
    * @returns {Promise<void>} 200 with the formatted events, 400 if invalid id
    */
-  async getMajorEvents(req, res) {
-    // Fetch up to 2 approved major events with a date in the future, excluding category_id and user_id
-    const events = await Event.findAll({
+  async getMajorEvent(req, res) {
+    // Fetch up to approved major event with a date in the future, excluding category_id and user_id
+    const event = await Event.findOne({
       attributes: { exclude: ["category_id", "user_id"] },
       where: {
         status: "approved",
@@ -241,12 +241,11 @@ export const eventController = {
           attributes: ["id", "pseudo"],
         },
       ],
-      limit: 1,
       order: [["date", "ASC"]],
     });
 
     // Format event fields (date/times/phone) and compute the slug
-    const formattedEvent = events.map((event) => formatEvent(event));
+    const formattedEvent = formatEvent(event);
 
     res.status(200).json(formattedEvent);
   },

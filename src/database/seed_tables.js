@@ -15,7 +15,7 @@ async function seedDatabase() {
       { name: "Laiton" },
       { name: "Bois" },
       { name: "Terre" },
-      { name: "Mixte" },
+      { name: "Multi" },
     ];
     const categories = await Category.bulkCreate(categoryData);
     console.log(categoryData.length, "Categories ");
