@@ -128,7 +128,7 @@ export const eventController = {
 
     // Fetch approved events with includes to compute slug reliably
     const events = await Event.findAll({
-      where: { status: "pending" },
+      where: { status: "approved" },
       attributes: { exclude: ["category_id", "user_id"] },
       include: [
         { association: "category", attributes: ["id", "name"] },
@@ -145,10 +145,10 @@ export const eventController = {
     const matched = events.find(
       (event) =>
         slugifyWithComponents(
+          event.eventType,
           event.category?.name ?? "",
           event.organizer,
-          event.dateFormatted,
-          event.tags ?? []
+          event.date
         ) === slug
     );
 

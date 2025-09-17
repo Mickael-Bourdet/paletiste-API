@@ -58,13 +58,8 @@ export const formatPhoneNumber = (reservations) => {
  * @param {Date|string} date - The event date to extract year.
  * @returns {string} The slugified string.
  */
-export const slugifyWithComponents = (
-  eventType,
-  category,
-  organizer,
-  dateFormatted
-) => {
-  const year = new Date(dateFormatted).getFullYear();
+export const slugifyWithComponents = (eventType, category, organizer, date) => {
+  const year = new Date(date).getFullYear();
 
   // Detect special tags
   let prefix = "concours";
